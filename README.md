@@ -1,11 +1,11 @@
 DynamixelQ
 ==========
-#####Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
+#####Library to control ROBOTIS [Dynamixel smart actuators](http://www.robotis.com/xe/dynamixel_en) with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
 ######Version 1.0, 10-4-14######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
-Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm.htm).
-
+Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm.htm).  
+&nbsp;  
 
 Features and benefits vs. the default library:  
  - Higher baud rates (up to 3 Mbps for MX series) available directly.  
@@ -19,12 +19,14 @@ Features and benefits vs. the default library:
  - Cleaned up code to improve readability and use consistent style: removed code for boards other than OpenCM9.04 and actuators other than AX and MX series, Removed debug code and code related to 2.0 protocol.  
  - Fixed [checksum bug](http://www.robotis.com/xe/?mid=qna_en&document_srl=1140665&comment_srl=1144814&rnd=1144814#comment_1144814).  
  - Many other optimizations and improvements.  
+ &nbsp;  
  
 Current limitations:  
  - Only MX64, AX12, and AX18 actuators have been specifically tested.  
  - Using AX and MX series actuators together is currently not supported.  
  - Many higher-level functions, e.g., ```setWheelMode```, have been removed. Improved versions of these will be added in the future.  
  - More examples needed.  
+&nbsp;  
 
 Installation:  
  1. Quit the ROBOTIS_OpenCM IDE application.  
@@ -41,6 +43,7 @@ How to read from and write to Dynamixels at high speed using OpenCm9.04:
  - Decrease the [return delay time](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Actuator_Address_05).  
  - Minimize read and write operations by reading and writing across multiple registers and using the SYNC_WRITE-based functions.  
  - Remove unnecessary overhead from code.  
+&nbsp;  
 
 How to write from OpenCm9.04 to PC via USB at high speed:  
  - Minimize number of individual USB serial write operations.  
