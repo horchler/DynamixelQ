@@ -1,6 +1,6 @@
 DynamixelQ
 ==========
-#####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) using the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
+#####Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
 ######Version 1.0, 10-4-14######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
@@ -8,23 +8,23 @@ Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM
 
 
 Features and benefits vs. the default library:  
-&nbsp;&ndash;&nbsp;Higher baud rates (up to 3 Mbps for MX series) available directly.  
-&nbsp;&ndash;&nbsp;Added efficient overloaded array versions of functions to read and write across multiple registers.  
-&nbsp;&ndash;&nbsp;Emulated [SYNC_READ](http://support.robotis.com/en/product/dynamixel_pro/communication/instruction_status_packet.htm)-based functions.  
-&nbsp;&ndash;&nbsp;Improved [SYNC_WRITE](http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE)-based functions.  
-&nbsp;&ndash;&nbsp;```#define``` for baud rates and [Dynamixel addresses](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table).  
-&nbsp;&ndash;&nbsp;Added functions that automatically check if register addresses are bytes, words, or invalid.  
-&nbsp;&ndash;&nbsp;Functions redesigned to use strict byte and word input arguments to catch errors at compile time.  
-&nbsp;&ndash;&nbsp;Added [fast, flexible print functions](https://github.com/horchler/DynamixelQ/blob/master/DynamixelQ/USBprint.h) to replace ```SerialUSB.print```.  
-&nbsp;&ndash;&nbsp;Cleaned up code to improve readability and use consistent style: removed code for boards other than OpenCM9.04 and actuators other than AX and MX series, Removed debug code and code related to 2.0 protocol.  
-&nbsp;&ndash;&nbsp;Fixed [checksum bug](http://www.robotis.com/xe/?mid=qna_en&document_srl=1140665&comment_srl=1144814&rnd=1144814#comment_1144814).  
-&nbsp;&ndash;&nbsp;Many other optimizations and improvements.  
+ - Higher baud rates (up to 3 Mbps for MX series) available directly.  
+ - Added efficient overloaded array versions of functions to read and write across multiple registers.  
+ - Emulated [SYNC_READ](http://support.robotis.com/en/product/dynamixel_pro/communication/instruction_status_packet.htm)-based functions.  
+ - Improved [SYNC_WRITE](http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE)-based functions.  
+ - ```#define``` for baud rates and [Dynamixel addresses](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table).  
+ - Added functions that automatically check if register addresses are bytes, words, or invalid.  
+ - Functions redesigned to use strict byte and word input arguments to catch errors at compile time.  
+ - Added [fast, flexible print functions](https://github.com/horchler/DynamixelQ/blob/master/DynamixelQ/USBprint.h) to replace ```SerialUSB.print```.  
+ - Cleaned up code to improve readability and use consistent style: removed code for boards other than OpenCM9.04 and actuators other than AX and MX series, Removed debug code and code related to 2.0 protocol.  
+ - Fixed [checksum bug](http://www.robotis.com/xe/?mid=qna_en&document_srl=1140665&comment_srl=1144814&rnd=1144814#comment_1144814).  
+ - Many other optimizations and improvements.  
  
 Current limitations:  
-&nbsp;&ndash;&nbsp;Only MX64, AX12, and AX18 actuators have been specifically tested.  
-&nbsp;&ndash;&nbsp;Using AX and MX series actuators together is currently not supported.  
-&nbsp;&ndash;&nbsp;Many higher-level functions, e.g., ```setWheelMode```, have been removed. Improved versions of these will be added in the future.  
-&nbsp;&ndash;&nbsp;More examples needed.  
+ - Only MX64, AX12, and AX18 actuators have been specifically tested.  
+ - Using AX and MX series actuators together is currently not supported.  
+ - Many higher-level functions, e.g., ```setWheelMode```, have been removed. Improved versions of these will be added in the future.  
+ - More examples needed.  
 
 Installation:  
  1. Quit the ROBOTIS_OpenCM IDE application.  
@@ -36,19 +36,19 @@ Installation:
 --------
 
 How to read from and write to Dynamixels at high speed using OpenCm9.04:  
-&nbsp;&ndash;&nbsp;Increase baud rate between microcontroller and servos (though this can be done in software, it's much safer using the Windows-only [Dynamixel Wizard](http://support.robotis.com/en/software/roboplus/dynamixel_monitor.htm) that is part of [RoboPlus](http://support.robotis.com/en/software/roboplus_main.htm)).  
-&nbsp;&ndash;&nbsp;[Update the firmware](http://www.robotis.com/xe/download_en/1132559) of all of your actuators to make sure that it is current and consistent.  
-&nbsp;&ndash;&nbsp;Decrease the [return delay time](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Actuator_Address_05).  
-&nbsp;&ndash;&nbsp;Minimize read and write operations by reading and writing across multiple registers and using the SYNC_WRITE-based functions.  
-&nbsp;&ndash;&nbsp;Remove unnecessary overhead from code.  
+ - Increase baud rate between microcontroller and servos (though this can be done in software, it's much safer using the Windows-only [Dynamixel Wizard](http://support.robotis.com/en/software/roboplus/dynamixel_monitor.htm) that is part of [RoboPlus](http://support.robotis.com/en/software/roboplus_main.htm)).  
+ - [Update the firmware](http://www.robotis.com/xe/download_en/1132559) of all of your actuators to make sure that it is current and consistent.  
+ - Decrease the [return delay time](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Actuator_Address_05).  
+ - Minimize read and write operations by reading and writing across multiple registers and using the SYNC_WRITE-based functions.  
+ - Remove unnecessary overhead from code.  
 
 How to write from OpenCm9.04 to PC via USB at high speed:  
-&nbsp;&ndash;&nbsp;Minimize number of individual USB serial write operations.  
-&nbsp;&ndash;&nbsp;Use the fast print functions included with DynamixelQ.  
-&nbsp;&ndash;&nbsp;Increase baud rate between microcontroller and computer.  
-&nbsp;&ndash;&nbsp;Reduce the [USB latency time](http://robosavvy.com/forum/viewtopic.php?p=8967#p8967) (Windows).  
-&nbsp;&ndash;&nbsp;Send encoded (compressed) data and decompress later on PC.  
- &nbsp;
+ - Minimize number of individual USB serial write operations.  
+ - Use the fast print functions included with DynamixelQ.  
+ - Increase baud rate between microcontroller and computer.  
+ - Reduce the [USB latency time](http://robosavvy.com/forum/viewtopic.php?p=8967#p8967) (Windows).  
+ - Send encoded (compressed) data and decompress later on PC.  
+&nbsp;
  
 --------
 
