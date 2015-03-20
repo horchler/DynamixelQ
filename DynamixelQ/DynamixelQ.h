@@ -21,12 +21,12 @@ public:
 	virtual ~DynamixelQ(void);
 	
 	void begin(byte baud);
-	
-	//byte available(void);
-	//byte readRaw(void);
-	//void writeRaw(const byte bValue);
-	//void writeRaw(const uint8 *value, uint8 len);
-	
+	/*
+	byte available(void);
+	byte readRaw(void);
+	void writeRaw(const byte bValue);
+	void writeRaw(const uint8 *value, uint8 len);
+	*/
 	byte readByte(byte bID, byte bAddress);
 	void readByte(const byte bID[], byte bIDLength, byte bAddress, byte bData[]);
 	void readByte(const byte bID[], byte bIDLength, const byte bAddress[], byte bData[]);
