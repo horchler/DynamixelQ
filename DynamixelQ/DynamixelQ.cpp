@@ -2,7 +2,7 @@
  *	DynamixelQ.cpp
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 10-4-14
+ *	Created: 8-13-14, modified: 3-20-15
  *
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -11,92 +11,97 @@
 #include "delay.h"
 #include "DynamixelQ.h"
 
-DynamixelQ::DynamixelQ(const int DXL_Type)
+DynamixelQ::DynamixelQ(const byte DXL_Type)
 {
 	this->mDxlDevice = DXL_DEV1;
 	this->mDxlUsart = USART1;
-
+	
 	this->mTxPort = PORT_DXL_TXD;
 	this->mRxPort = PORT_DXL_RXD;
 	this->mTxPin = PIN_DXL_TXD;
 	this->mRxPin = PIN_DXL_RXD;
-
+	
 	this->mDirPort = PORT_TXRX_DIRECTION;
 	this->mDirPin = PIN_TXRX_DIRECTION;
 	
 	switch (DXL_Type) {
+		case 1:
 		case 2:
 		case 3:
-		case 1:
-			DXL_ADDRESS_TYPE[29] = 0;
+			DXL_ADDRESS_TYPE[DXL_MULTI_TURN_OFFSET] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[21] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[DXL_RESOLUTION_DIVIDER] = DXL_UNDEFINED_ADDRESS_TYPE;
 			
-			DXL_ADDRESS_TYPE[20] = 3;
-			DXL_ADDRESS_TYPE[21] = 3;
-			DXL_ADDRESS_TYPE[22] = 3;
-	
-			DXL_ADDRESS_TYPE[68] = 3;
-			DXL_ADDRESS_TYPE[69] = 3;
-			DXL_ADDRESS_TYPE[70] = 3;
-			DXL_ADDRESS_TYPE[71] = 3;
-			DXL_ADDRESS_TYPE[72] = 3;
-			DXL_ADDRESS_TYPE[73] = 3;
+			DXL_ADDRESS_TYPE[DXL_CCW_COMPLIANCE_SLOPE] = DXL_BYTE_ADDRESS_TYPE;
+			
+			DXL_ADDRESS_TYPE[DXL_CURRENT] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[DXL_TORQUE_CONTROL_MODE_ENABLE] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[70] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[DXL_GOAL_TORQUE] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[72] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[DXL_GOAL_ACCELERATION] = DXL_UNDEFINED_ADDRESS_TYPE;
 			
 			#ifndef DXL_MAX_BAUD
 				#define DXL_MAX_BAUD DXL_AX_MAX_BAUD
+			#elif DXL_MAX_BAUD > DXL_AX_MAX_BAUD
+				#error DXL_MAX_BAUD greater than DXL_AX_MAX_BAUD
 			#endif
 			break;
-		
+			
 		case 11:
 		case 12:
-			DXL_ADDRESS_TYPE[68] = 3;
-			DXL_ADDRESS_TYPE[69] = 3;
-			DXL_ADDRESS_TYPE[70] = 3;
-			DXL_ADDRESS_TYPE[71] = 3;
-			DXL_ADDRESS_TYPE[72] = 3;
+			DXL_ADDRESS_TYPE[DXL_CURRENT] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[DXL_TORQUE_CONTROL_MODE_ENABLE] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[70] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[DXL_GOAL_TORQUE] = DXL_UNDEFINED_ADDRESS_TYPE;
+			DXL_ADDRESS_TYPE[72] = DXL_UNDEFINED_ADDRESS_TYPE;
 			// Fall through
 		case 13:
 		case 14:
 		case 10:
 			#ifndef DXL_MAX_BAUD
 				#define DXL_MAX_BAUD DXL_MX_MAX_BAUD
+			#elif DXL_MAX_BAUD > DXL_MX_MAX_BAUD
+				#error DXL_MAX_BAUD greater than DXL_MX_MAX_BAUD
 			#endif
 			break;
-	
+			
 		default:
 			#ifndef DXL_MAX_BAUD
 				#define DXL_MAX_BAUD DXL_AX_MAX_BAUD
+			#elif DXL_MAX_BAUD > DXL_AX_MAX_BAUD
+				#error DXL_MAX_BAUD greater than DXL_AX_MAX_BAUD
 			#endif
 			break;
 	}
 }
 DynamixelQ::~DynamixelQ(void) {
-	
 }
 
-void DynamixelQ::begin(const uint32 baud)
+void DynamixelQ::begin(const byte baud)
 {
 	uint32 baudRate;
-  
-	baudRate = this->getBaudRate(baud);
+	
+	baudRate = this->convertBaudRate(baud);
 	if (baudRate != 0) {
 		afio_remap(AFIO_REMAP_USART1);
 		gpio_set_mode(this->mDirPort, this->mDirPin, GPIO_OUTPUT_PP);
 		gpio_write_bit(this->mDirPort, this->mDirPin, 0); // RX Enable
-
+		
 		// initialize GPIO D20(PB6), D21(PB7) as DXL TX, RX respectively
 		gpio_set_mode(this->mTxPort, this->mTxPin, GPIO_AF_OUTPUT_PP);
 		gpio_set_mode(this->mRxPort, this->mRxPin, GPIO_INPUT_FLOATING);
-
+		
 		//Initialize USART 1 device
 		usart_init(this->mDxlUsart);
 		usart_set_baud_rate(this->mDxlUsart, STM32_PCLK2, baudRate);
-
+		
 		nvic_irq_set_priority(this->mDxlUsart->irq_num, 0);
 		usart_attach_interrupt(this->mDxlUsart, this->mDxlDevice->handlers);
 		usart_enable(this->mDxlUsart);
 		delay_us(1e5);
 		this->mDXLtxrxStatus = 0;
-
+		
 		this->clearBuffer();
 	}
 }
@@ -107,9 +112,8 @@ void DynamixelQ::begin(const uint32 baud)
  */
 byte DynamixelQ::readByte(const byte bID, const byte bAddress)
 {
-	this->clearBuffer();
 	this->mParamBuffer[0] = bAddress;
-	this->mParamBuffer[1] = 1;
+	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
 	return (this->txRxPacket(bID, INST_READ, 2)) ? this->mRxBuffer[5] : DXL_INVALID_BYTE;
 }
 
@@ -120,7 +124,7 @@ byte DynamixelQ::readByte(const byte bID, const byte bAddress)
 void DynamixelQ::readByte(const byte bID[], const byte bIDLength, const byte bAddress, byte bData[])
 {
 	byte i;
-
+	
 	for (i = 0; i < bIDLength; i++) {
 		bData[i] = this->readByte(bID[i], bAddress);
 	}
@@ -133,7 +137,7 @@ void DynamixelQ::readByte(const byte bID[], const byte bIDLength, const byte bAd
 void DynamixelQ::readByte(const byte bID[], const byte bIDLength, const byte bAddress[], byte bData[])
 {
 	byte i;
-
+	
 	for (i = 0; i < bIDLength; i++) {
 		bData[i] = this->readByte(bID[i], bAddress[i]);
 	}
@@ -141,17 +145,22 @@ void DynamixelQ::readByte(const byte bID[], const byte bIDLength, const byte bAd
 
 
 /*
- *	For the single ID, bID, write the byte value parameter in wData to the address
+ *	Write the byte value parameter in bData to the address bAddress of all actuators.
+ */
+byte DynamixelQ::writeByte(const byte bAddress, const byte bData)
+{
+	return this->writeByte(BROADCAST_ID, bAddress, bData);
+}
+
+/*
+ *	For the single ID, bID, write the byte value parameter in bData to the address
  *	bAddress. 
  */
 byte DynamixelQ::writeByte(const byte bID, const byte bAddress, const byte bData)
 {
-	const byte param_length = 2;
-
-	this->clearBuffer();
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = bData;
-	return this->txRxPacket(bID, INST_WRITE, param_length);
+	return this->txRxPacket(bID, INST_WRITE, 2);
 }
 
 /*
@@ -164,12 +173,11 @@ byte DynamixelQ::writeByte(const byte bID, const byte bAddress, const byte bData
 byte DynamixelQ::writeByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData)
 {
 	byte i, buff_idx = 1, lobyte;
-
-	this->clearBuffer();
+	
 	this->mParamBuffer[0] = bAddress;
-	this->mParamBuffer[1] = 1;
+	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
 	lobyte = DXL_LOBYTEQ(bData);
-	for (i = 0; i < fmin(bIDLength, DXL_MAX_IDS_PER_BYTE); i++) {
+	for (i = 0; i < DXL_MIN(bIDLength, DXL_MAX_IDS_PER_BYTE); i++) {
 		this->mParamBuffer[++buff_idx] = bID[i];
 		this->mParamBuffer[++buff_idx] = lobyte;
 	}
@@ -186,11 +194,10 @@ byte DynamixelQ::writeByte(const byte bID[], const byte bIDLength, const byte bA
 byte DynamixelQ::writeByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData[])
 {
 	byte i, buff_idx = 1;
-
-	this->clearBuffer();
+	
 	this->mParamBuffer[0] = bAddress;
-	this->mParamBuffer[1] = 1;
-  	for (i = 0; i < fmin(bIDLength, DXL_MAX_IDS_PER_BYTE); i++) {
+	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
+  	for (i = 0; i < DXL_MIN(bIDLength, DXL_MAX_IDS_PER_BYTE); i++) {
 		this->mParamBuffer[++buff_idx] = bID[i];
 		this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(bData[i]);
 	}
@@ -203,9 +210,8 @@ byte DynamixelQ::writeByte(const byte bID[], const byte bIDLength, const byte bA
  */
 word DynamixelQ::readWord(const byte bID, const byte bAddress)
 {
-	this->clearBuffer();
 	this->mParamBuffer[0] = bAddress;
-	this->mParamBuffer[1] = 2;
+	this->mParamBuffer[1] = DXL_WORD_LENGTH;
 	return (this->txRxPacket(bID, INST_READ, 2)) ? DXL_MAKEWORDQ(this->mRxBuffer[5], this->mRxBuffer[6]) : DXL_INVALID_WORD;
 }
 
@@ -216,7 +222,7 @@ word DynamixelQ::readWord(const byte bID, const byte bAddress)
 void DynamixelQ::readWord(const byte bID[], const byte bIDLength, const byte bAddress, word wData[])
 {
 	byte i;
-
+	
 	for (i = 0; i < bIDLength; i++) {
 		wData[i] = this->readWord(bID[i], bAddress);	
 	}
@@ -229,12 +235,19 @@ void DynamixelQ::readWord(const byte bID[], const byte bIDLength, const byte bAd
 void DynamixelQ::readWord(const byte bID[], const byte bIDLength, const byte bAddress[], word wData[])
 {
 	byte i;
-
+	
 	for (i = 0; i < bIDLength; i++) {
 		wData[i] = this->readWord(bID[i], bAddress[i]);	
 	}
 }
 
+/*
+ *	Write the word value parameter in wData to the address bAddress of all actuators.
+ */
+byte DynamixelQ::writeWord(const byte bAddress, const word wData)
+{
+	return this->writeWord(BROADCAST_ID, bAddress, wData);
+}
 
 /*
  *	For the single ID, bID, write the word value parameter in wData to the address
@@ -242,13 +255,10 @@ void DynamixelQ::readWord(const byte bID[], const byte bIDLength, const byte bAd
  */
 byte DynamixelQ::writeWord(const byte bID, const byte bAddress, const word wData)
 {
- 	const byte param_length = 3;
- 
-	this->clearBuffer();
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_LOBYTEQ(wData);
 	this->mParamBuffer[2] = DXL_HIBYTEQ(wData);
-	return this->txRxPacket(bID, INST_WRITE, param_length);
+	return this->txRxPacket(bID, INST_WRITE, 3);
 }
 
 /*
@@ -261,13 +271,12 @@ byte DynamixelQ::writeWord(const byte bID, const byte bAddress, const word wData
 byte DynamixelQ::writeWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData)
 {
 	byte i, buff_idx = 1, lobyte, hibyte;
-
-	this->clearBuffer();
+	
 	this->mParamBuffer[0] = bAddress;
-	this->mParamBuffer[1] = 2;
+	this->mParamBuffer[1] = DXL_WORD_LENGTH;
 	lobyte = DXL_LOBYTEQ(wData);
 	hibyte = DXL_HIBYTEQ(wData);
-	for (i = 0; i < fmin(bIDLength, DXL_MAX_IDS_PER_WORD); i++) {
+	for (i = 0; i < DXL_MIN(bIDLength, DXL_MAX_IDS_PER_WORD); i++) {
 		this->mParamBuffer[++buff_idx] = bID[i];
 		this->mParamBuffer[++buff_idx] = lobyte;
 		this->mParamBuffer[++buff_idx] = hibyte;
@@ -285,11 +294,10 @@ byte DynamixelQ::writeWord(const byte bID[], const byte bIDLength, const byte bA
 byte DynamixelQ::writeWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData[])
 {
 	byte i, buff_idx = 1;
-
-	this->clearBuffer();
+	
 	this->mParamBuffer[0] = bAddress;
-	this->mParamBuffer[1] = 2;
-	for (i = 0; i < fmin(bIDLength, DXL_MAX_IDS_PER_WORD); i++) {
+	this->mParamBuffer[1] = DXL_WORD_LENGTH;
+	for (i = 0; i < DXL_MIN(bIDLength, DXL_MAX_IDS_PER_WORD); i++) {
 		this->mParamBuffer[++buff_idx] = bID[i];
 		this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(wData[i]);
 		this->mParamBuffer[++buff_idx] = DXL_HIBYTEQ(wData[i]);
@@ -310,24 +318,24 @@ byte DynamixelQ::writeWord(const byte bID[], const byte bIDLength, const byte bA
  */
 void DynamixelQ::syncRead(const byte bID, const byte bStartAddress, const byte bNumAddress, word wData[])
 {
-	byte i, addr_idx = bStartAddress, buff_idx = 5, addr_sz[bNumAddress];
-
+	byte i, addr_len = 0, buff_idx = 5, addr_sz[bNumAddress];
+	
+	for (i = 0; i < bNumAddress; i++) {
+		addr_sz[i] = this->isAddressWord(bStartAddress+addr_len) ? DXL_WORD_LENGTH : DXL_BYTE_LENGTH;
+		addr_len += addr_sz[i];
+	}
 	if (bID < BROADCAST_ID) {
 		if (bNumAddress == 1) {
-			wData[0] = (this->isAddressWord(addr_idx)) ? this->readWord(bID, addr_idx) : this->readByte(bID, addr_idx);
+			wData[0] = (addr_sz[0] == DXL_WORD_LENGTH) ? this->readWord(bID, bStartAddress) : this->readByte(bID, bStartAddress);
+			return;
 		} else {
-			this->clearBuffer();
 			this->mParamBuffer[0] = bStartAddress;
-			for (i = 0; i < bNumAddress; i++) {
-				addr_sz[i] = this->isAddressWord(addr_idx) ? 2 : 1;
-				addr_idx += addr_sz[i];
-			}
-			this->mParamBuffer[1] = addr_idx-bStartAddress;
-			if (this->txRxPacket(bID, INST_READ, addr_idx)) {
+			this->mParamBuffer[1] = addr_len;
+			if (this->txRxPacket(bID, INST_READ, 2)) {
 				for (i = 0; i < bNumAddress; i++) {
-					if (addr_sz[i] == 2) {
+					if (addr_sz[i] == DXL_WORD_LENGTH) {
 						wData[i] = DXL_MAKEWORDQ(this->mRxBuffer[buff_idx], this->mRxBuffer[buff_idx+1]);
-						buff_idx += 2;
+						buff_idx += DXL_WORD_LENGTH;
 					} else {
 						wData[i] = this->mRxBuffer[buff_idx++];
 					}
@@ -338,7 +346,7 @@ void DynamixelQ::syncRead(const byte bID, const byte bStartAddress, const byte b
 	}
 	
 	for (i = 0; i < bNumAddress; i++) {
-		wData[i] = (addr_sz[i] == 2) ? DXL_INVALID_WORD : DXL_INVALID_BYTE;
+		wData[i] = (addr_sz[i] == DXL_WORD_LENGTH) ? DXL_INVALID_WORD : DXL_INVALID_BYTE;
 	}
 }
 
@@ -377,14 +385,26 @@ void DynamixelQ::syncRead(const byte bID[], byte bIDLength, const byte bStartAdd
 	}
 }
 
+/*
+ *	The bNumDataPerID parameters stored in wData are written beginning at address
+ *	bStartAddress to all actuators. Each address is checked to see if it contains a byte
+ *	or a word and the values in wData are transformed accordingly. In the case of bytes
+ *	(and invalid addresses), data values that overflow are masked to 0xFF). Note that this
+ *	function does not actually use the SYNC_WRITE instruction as it is unnecessary for
+ *	writing to a single ID.
+ */
+byte DynamixelQ::syncWrite(const byte bStartAddress, const word wData[], const byte bNumDataPerID)
+{
+	return this->syncWrite(BROADCAST_ID, bStartAddress, wData, bNumDataPerID);
+}
 
 /*
  *	For the single ID, bID, bNumDataPerID parameters stored in wData are written beginning
  *	at address bStartAddress. Each address is checked to see if it contains a byte or a
  *	word and the values in wData are transformed accordingly. In the case of bytes (and
- *	invalid addresses), data values that overflow are masked to 0xFF). If bNumDataPerID is
- *	so large that the Note that this function does not actually use the SYNC_WRITE
- *	instruction as it is unnecessary for writing to a single ID.
+ *	invalid addresses), data values that overflow are masked to 0xFF). Note that this
+ *	function does not actually use the SYNC_WRITE instruction as it is unnecessary for
+ *	writing to a single ID.
  */
 byte DynamixelQ::syncWrite(const byte bID, const byte bStartAddress, const word wData[], const byte bNumDataPerID)
 {
@@ -399,7 +419,6 @@ byte DynamixelQ::syncWrite(const byte bID, const byte bStartAddress, const word 
 			return 0;
 		}
 	} else {
-		this->clearBuffer();
 		this->mParamBuffer[0] = bStartAddress;
 		for (i = 0; i < bNumDataPerID; i++) {
 			if (this->isAddressWord(bStartAddress+buff_idx)) {
@@ -427,16 +446,14 @@ byte DynamixelQ::syncWrite(const byte bID, const byte bStartAddress, const word 
 byte DynamixelQ::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAddress, const word wData[], const byte bNumDataPerID, const byte bDataLength)
 {	
 	byte i, j, buff_idx = 2, addr_idx = bStartAddress, valid_idx;
-
-	this->clearBuffer();
-	this->mParamBuffer[0] = bStartAddress;
 	
+	this->mParamBuffer[0] = bStartAddress;
 	if (bNumDataPerID == bDataLength) {
 		for (i = 0; i < bNumDataPerID; i++) {
 			if (this->isAddressWord(addr_idx)) {
 				this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(wData[i]);
 				this->mParamBuffer[++buff_idx] = DXL_HIBYTEQ(wData[i]);
-				addr_idx += 2;
+				addr_idx += DXL_WORD_LENGTH;
 			} else if (this->isAddressByte(addr_idx)) {
 				this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(wData[i]);
 				addr_idx++;
@@ -461,7 +478,7 @@ byte DynamixelQ::syncWrite(const byte bID[], const byte bIDLength, const byte bS
 				if (this->isAddressWord(addr_idx)) {
 					this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(wData[j]);
 					this->mParamBuffer[++buff_idx] = DXL_HIBYTEQ(wData[j]);
-					addr_idx += 2;
+					addr_idx += DXL_WORD_LENGTH;
 				} else if (this->isAddressByte(addr_idx)) {
 					this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(wData[j]);
 					addr_idx++;
@@ -471,58 +488,78 @@ byte DynamixelQ::syncWrite(const byte bID[], const byte bIDLength, const byte bS
 			}
 		}
 	}
-	
 	this->mParamBuffer[1] = addr_idx-bStartAddress;
 	
 	return this->txRxPacket(BROADCAST_ID, INST_SYNC_WRITE, buff_idx+1);
 }
 
 
-
-
 /*
  *	PRIVATE MEMBER FUNCTIONS
  */
+void DynamixelQ::writeRaw(const uint8 value)
+{
+	this->nsDelay(800);
+	this->dxlTxEnable();	// Call dxlTxEnable() before write operations
+	this->mDxlUsart->regs->DR = (value & DXL_USART_DR_PARITY_MASK);
+	while ((this->mDxlUsart->regs->SR & USART_SR_TC) == RESET);
+	this->dxlTxDisable();	//Call dxlTxDisable() after writing finished
+}
+
+void DynamixelQ::writeRaw(const uint8 *value, uint8 len)
+{
+	this->nsDelay(800);
+	this->dxlTxEnable();
+	while (len > 1) {
+		this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);
+		value++;
+		while (!(this->mDxlUsart->regs->SR & USART_SR_TXE));
+		len--;
+	}
+	this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);
+	while ((this->mDxlUsart->regs->SR & USART_SR_TC) == RESET);
+	this->dxlTxDisable();
+}
 
 void DynamixelQ::txPacket(byte bID, byte bInstruction, byte bParameterLength)
 {
-	byte bCount;
-	word bCheckSum = bID + bParameterLength+2 + bInstruction;
-
+	byte bCount, bCheckSum;
+	
+	this->clearBuffer();
+	bCheckSum = bID + bParameterLength+2 + bInstruction;
 	this->mDxlDevice->read_pointer = this->mDxlDevice->write_pointer;
-
-	this->dxlTxEnable();
-	this->writeRaw(DXL_PACKET_HEADER);
-	this->writeRaw(DXL_PACKET_HEADER);
-	this->writeRaw(bID);
-	this->writeRaw(bParameterLength+2);
-	this->writeRaw(bInstruction);
+	
+	this->mTxBuffer[0] = DXL_PACKET_HEADER;
+	this->mTxBuffer[1] = DXL_PACKET_HEADER;
+	this->mTxBuffer[2] = bID;
+	this->mTxBuffer[3] = bParameterLength+2;
+	this->mTxBuffer[4] = bInstruction;
 	for (bCount = 0; bCount < bParameterLength; bCount++) {
-		bCheckSum += mParamBuffer[bCount];
-		this->writeRaw(this->mParamBuffer[bCount]);
+		bCheckSum += this->mParamBuffer[bCount];
+		this->mTxBuffer[5+bCount] = this->mParamBuffer[bCount];
 	}
-	this->writeRaw(~bCheckSum);
-	this->dxlTxDisable();
-
+	this->mTxBuffer[5+bParameterLength] = (byte)(~bCheckSum);
+	
+	writeRaw(this->mTxBuffer, 6+bParameterLength);
+	
 	this->mDXLtxrxStatus = (1<<COMM_TXSUCCESS);
 }
 
 byte DynamixelQ::rxPacket(byte bID, byte bRxLength)
 {
 	unsigned long ulCounter;
-	word bCount, bLength, bChecksum;
+	byte bCount, bLength, bChecksum;
 	
 	for (bCount = 0; bCount < bRxLength; bCount++) {
 		ulCounter = 0;
-		while (this->mDxlDevice->read_pointer == this->mDxlDevice->write_pointer) {
-			this->nDelay(NANO_TIME_DELAY);
+		while (!this->available()) {
+			this->nsDelay(0);
 			if (ulCounter++ > RX_TIMEOUT_COUNT2) {
 				this->mDXLtxrxStatus |= (1<<COMM_RXTIMEOUT);
-				this->clearBuffer();
 				return 0;
 			}
 		}
-		this->mRxBuffer[bCount] = this->mDxlDevice->data_buffer[this->mDxlDevice->read_pointer++ & DXL_RX_BUF_SIZE];
+		this->mRxBuffer[bCount] = readRaw();
 	}
 	
 	bLength = bCount;
@@ -531,18 +568,15 @@ byte DynamixelQ::rxPacket(byte bID, byte bRxLength)
 		for (bCount = 2; bCount < bLength; bCount++) {
 			bChecksum += this->mRxBuffer[bCount];
 		}
-
 		if ((this->mRxBuffer[0] != DXL_PACKET_HEADER) ||
-			(this->mRxBuffer[1] != DXL_PACKET_HEADER) ||
-		    (this->mRxBuffer[this->mPktIdIndex] != bID) ||
-		    (this->mRxBuffer[this->mPktLengthIndex] != bLength-this->mPktInstIndex) ||
-		    ((bChecksum & DXL_CHECKSUM_MASK) != DXL_CHECKSUM_MASK)) {
+				(this->mRxBuffer[1] != DXL_PACKET_HEADER) ||
+				(this->mRxBuffer[this->mPktIdIndex] != bID) ||
+				(this->mRxBuffer[this->mPktLengthIndex] != bLength-this->mPktInstIndex) ||
+				((bChecksum & DXL_CHECKSUM_MASK) != DXL_CHECKSUM_MASK)) {
 			this->mDXLtxrxStatus |= (1<<COMM_RXCORRUPT);
-			this->clearBuffer();
 			return 0;
 		}
 	}
-
 	return bLength;
 }
 
@@ -551,19 +585,19 @@ byte DynamixelQ::rxPacket(byte bID, byte bRxLength)
  */
 byte DynamixelQ::txRxPacket(byte bID, byte bInst, byte bTxParaLen)
 {
-	word bRxLenEx;
+	byte bRxLenEx;
+	
 	this->mDXLtxrxStatus = 0;
-
 	this->txPacket(bID, bInst, bTxParaLen);
 	
 	if (bInst == INST_PING){
-		bRxLenEx = (bID == BROADCAST_ID) ? 0xFF : 6;
+		bRxLenEx = (bID == BROADCAST_ID) ? 0xFF : DXL_PACKET_HEADER_LENGTH;
 	} else if (bInst == INST_READ) {
-		bRxLenEx = 6+this->mParamBuffer[1];
+		bRxLenEx = DXL_PACKET_HEADER_LENGTH+this->mParamBuffer[1];
 	} else {
-		bRxLenEx = (bID == BROADCAST_ID) ? 0 : 6;
+		bRxLenEx = (bID == BROADCAST_ID) ? 0 : DXL_PACKET_HEADER_LENGTH;
 	}
-
+	
 	if (this->rxPacket(bID, bRxLenEx) != bRxLenEx) {
 		return 0;
 	} else {
@@ -572,25 +606,12 @@ byte DynamixelQ::txRxPacket(byte bID, byte bInst, byte bTxParaLen)
 	}
 }
 
-void DynamixelQ::writeRaw(uint8 value)
+void DynamixelQ::nsDelay(uint32 nsTime)
 {
-	// Call dxlTxEnable() before write operations
-	this->mDxlUsart->regs->DR = (value & DXL_USART_DR_PARITY_MASK);
-	while ((this->mDxlUsart->regs->SR & DXL_USART_SR_TRANSMISSION_COMPLETE) == RESET);
-	//Call dxlTxDisable() after writing finished
-}
-
-uint32 DynamixelQ::Dummy(uint32 tmp)
-{
-	return tmp;
-}
-
-void DynamixelQ::nDelay(uint32 nTime)
-{
-	uint32 cnt = 0, i;
-	static uint32 tmp = 0;
-
-	for (i = 0; i < nTime; i++) {
-		tmp += this->Dummy(cnt);
+	uint32 i;
+	static uint32 cnt = 0;
+	
+	for (i = 0; i < nsTime; i++) {
+		cnt += i;
 	}
 }
