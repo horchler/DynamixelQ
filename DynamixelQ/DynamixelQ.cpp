@@ -2,13 +2,12 @@
  *	DynamixelQ.cpp
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 3-22-15
+ *	Created: 8-13-14, modified: 3-23-15
  *
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
 
 #include "usb_type.h"
-#include "delay.h"
 #include "DynamixelQ.h"
 
 DynamixelQ::DynamixelQ(const byte DXL_Type)

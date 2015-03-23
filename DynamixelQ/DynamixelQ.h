@@ -2,7 +2,7 @@
  *	DynamixelQ.h
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 3-22-15
+ *	Created: 8-13-14, modified: 3-23-15
  *
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -11,6 +11,7 @@
 #define DYNAMIXELQ_H_
 
 #include <math.h>
+#include "delay.h"
 #include "dxl.h"
 #include "DXL_Address.h"
 #include "DXL_Defines.h"
@@ -102,9 +103,15 @@ public:
 	inline byte setLED(byte bLEDstate);
 	inline byte setLED(byte bID, byte bLEDstate);
 	inline byte setLED(const byte bID[], byte bIDLength, byte bLEDstate);
-	inline byte setLED(const byte bID[], byte bIDLength, const byte bLEDstate[]);
+	byte setLED(const byte bID[], byte bIDLength, byte bLEDstate[]);
+	
+	byte toggleLED(byte bLEDstate);
+	void toggleLED(const byte bID[], byte bIDLength);
 	
 	/*
+	byte blinkLED(byte bID, unsigned long usOnTime, unsigned long usOffTime);
+	void blinkLED(const byte bID[], byte bIDLength, unsigned long usOnTime, unsigned long usOffTime);
+	
 	inline byte getDGain(byte bID);
 	inline byte getIGain(byte bID);
 	inline byte getPGain(byte bID);

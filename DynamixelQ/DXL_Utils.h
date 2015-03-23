@@ -2,7 +2,7 @@
  *	DXL_Utils.h
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 3-22-15
+ *	Created: 2-23-15, modified: 3-23-15
  */
  
 #ifndef DXL_UTILS_H
@@ -126,22 +126,47 @@ inline void DynamixelQ::getLED(const byte bID[], const byte bIDLength, byte bLED
 
 inline byte DynamixelQ::setLED(const byte bLEDstate)
 {
-	return this->writeByte(DXL_LED, bLEDstate);
+	return this->writeByte(DXL_LED, !!bLEDstate);
 }
 
 inline byte DynamixelQ::setLED(const byte bID, const byte bLEDstate)
 {
-	return this->writeByte(bID, DXL_LED, bLEDstate);
+	return this->writeByte(bID, DXL_LED, !!bLEDstate);
 }
 
 inline byte DynamixelQ::setLED(const byte bID[], const byte bIDLength, const byte bLEDstate)
 {
+	return this->writeByte(bID, bIDLength, DXL_LED, !!bLEDstate);
+}
+
+byte DynamixelQ::setLED(const byte bID[], const byte bIDLength, byte bLEDstate[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		bLEDstate[i] = !!bLEDstate[i];
+	}
 	return this->writeByte(bID, bIDLength, DXL_LED, bLEDstate);
 }
 
-inline byte DynamixelQ::setLED(const byte bID[], const byte bIDLength, const byte bLEDstate[])
+byte DynamixelQ::toggleLED(const byte bID)
 {
-	return this->writeByte(bID, bIDLength, DXL_LED, bLEDstate);
+	byte bLEDstate;
+	
+	bLEDstate = !(this->readByte(bID, DXL_LED));
+	this->writeByte(DXL_LED, bLEDstate);
+	return bLEDstate;
+}
+
+void DynamixelQ::toggleLED(const byte bID[], const byte bIDLength)
+{
+	byte i, bLEDstate[bIDLength];
+	
+	this->readByte(bID, bIDLength, DXL_LED, bLEDstate);
+	for (i = 0; i < bIDLength; i++) {
+		bLEDstate[i] = !bLEDstate[i];
+	}
+	this->writeByte(bID, bIDLength, DXL_LED, bLEDstate);
 }
 
 
