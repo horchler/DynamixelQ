@@ -2,7 +2,7 @@
  *	DXL_Address.h
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 3-17-15
+ *	Created: 8-13-14, modified: 3-22-15
  */
 
 #ifndef DXL_ADDRESS_H_
@@ -12,36 +12,36 @@
 #include "DXL_MX.h"
 
 // Dynamixel register addresses common to all actuators
-#define DXL_MODEL_NUMBER 0
-#define DXL_VERSION_OF_FIRMWARE 2
-#define DXL_ID 3
-#define DXL_BAUD_RATE 4
-#define DXL_RETURN_DELAY_TIME 5
-#define DXL_CW_ANGLE_LIMIT 6
-#define DXL_CCW_ANGLE_LIMIT 8
-#define DXL_THE_HIGHEST_LIMT_TEMPERATURE 11
-#define DXL_THE_LOWEST_LIMT_VOLTAGE 12
-#define DXL_THE_HIGHEST_LIMT_VOLTAGE 13
-#define DXL_MAX_TORQUE 14
-#define DXL_STATUS_RETURN_LEVEL 16
-#define DXL_ALARM_LED 17
-#define DXL_ALARM_SHUTDOWN 18
+#define DXL_MODEL_NUMBER uint8(0)
+#define DXL_VERSION_OF_FIRMWARE uint8(2)
+#define DXL_ID uint8(3)
+#define DXL_BAUD_RATE uint8(4)
+#define DXL_RETURN_DELAY_TIME uint8(5)
+#define DXL_CW_ANGLE_LIMIT uint8(6)
+#define DXL_CCW_ANGLE_LIMIT uint8(8)
+#define DXL_THE_HIGHEST_LIMT_TEMPERATURE uint8(11)
+#define DXL_THE_LOWEST_LIMT_VOLTAGE uint8(12)
+#define DXL_THE_HIGHEST_LIMT_VOLTAGE uint8(13)
+#define DXL_MAX_TORQUE uint8(14)
+#define DXL_STATUS_RETURN_LEVEL uint8(16)
+#define DXL_ALARM_LED uint8(17)
+#define DXL_ALARM_SHUTDOWN uint8(18)
 
-#define DXL_TORQUE_ENABLE 24
-#define DXL_LED 25
+#define DXL_TORQUE_ENABLE uint8(24)
+#define DXL_LED uint8(25)
 
-#define DXL_GOAL_POSITION 30
-#define DXL_MOVING_SPEED 32
-#define DXL_TORQUE_LIMIT 34
-#define DXL_PRESENT_POSITION 36
-#define DXL_PRESENT_SPEED 38
-#define DXL_PRESENT_LOAD 40
-#define DXL_PRESENT_VOLTAGE 42
-#define DXL_PRESENT_TEMPERATURE 43
-#define DXL_REGISTERED 44
-#define DXL_MOVING 46
-#define DXL_LOCK 47
-#define DXL_PUNCH 48
+#define DXL_GOAL_POSITION uint8(30)
+#define DXL_MOVING_SPEED uint8(32)
+#define DXL_TORQUE_LIMIT uint8(34)
+#define DXL_PRESENT_POSITION uint8(36)
+#define DXL_PRESENT_SPEED uint8(38)
+#define DXL_PRESENT_LOAD uint8(40)
+#define DXL_PRESENT_VOLTAGE uint8(42)
+#define DXL_PRESENT_TEMPERATURE uint8(43)
+#define DXL_REGISTERED uint8(44)
+#define DXL_MOVING uint8(46)
+#define DXL_LOCK uint8(47)
+#define DXL_PUNCH uint8(48)
 
 #define DXL_BYTE_ADDRESS_TYPE 0
 #define DXL_WORD_L_ADDRESS_TYPE 1

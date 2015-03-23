@@ -59,30 +59,57 @@ public:
 	byte syncWrite(const byte bID[], byte bIDLength, byte bStartAddress, const word wData[], byte bNumDataPerID, byte bDataLength);
 	
 	// DXL_Utils
-	/*
-	word getModelNumber(byte bID);
-	byte getFirmwareVersion(byte bID);
-	byte getID(byte bID);
-	byte getBaudRate(byte bID);
+	
+	inline word getModel(byte bID);
+	inline void getModel(const byte bID[], byte bIDLength, word wModelNumber[]);
+	
+	inline byte getFirmware(byte bID);
+	inline void getFirmware(const byte bID[], byte bIDLength, byte bFirmwareVersion[]);
+	
+	inline byte isID(byte bID);
+	byte isID(const byte bID[], byte bIDLength);
+	void isID(const byte bID[], byte bIDLength, byte bBoolean[]);
+	
+	inline byte getBaudRate(byte bID);
+	inline void getBaudRate(const byte bID[], byte bIDLength, byte bBaudeRate[]);
 	
 	byte getReturnDelay(byte bID);
 	void getReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay[]);
-	*/
+	
 	inline byte setReturnDelay(byte bReturnDelay);
 	inline byte setReturnDelay(byte bID, byte bReturnDelay);
 	inline byte setReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay);
 	byte setReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay[]);
+	
 	/*
-	word getCWAngleLimit(byte bID);
-	word getCCWAngleLimit(byte bID);
-	byte getHighTemperatureLimit(byte bID);
-	byte getLowTemperatureLimit(byte bID);
-	byte getHighVoltageLimit(byte bID);
-	word getMaxTorque(byte bID);
-	byte getStatusReturnLevel(byte bID);
-	byte getAlarmLED(byte bID);
-	byte getAlarmShutdown(byte bID);
+	inline word getCWAngleLimit(byte bID);
+	inline word getCCWAngleLimit(byte bID);
+	inline byte getHighTemperatureLimit(byte bID);
+	inline byte getLowTemperatureLimit(byte bID);
+	inline byte getHighVoltageLimit(byte bID);
+	inline word getMaxTorque(byte bID);
+	inline byte getStatusReturnLevel(byte bID);
+	inline byte getAlarmLED(byte bID);
+	inline byte getAlarmShutdown(byte bID);
+	inline word getMultiTurnOffset(byte bID);
+	inline byte getResolutionDivider(byte bID);
+	inline byte isTorqueEnabled(byte bID);
 	*/
+	
+	inline byte getLED(byte bID);
+	inline void getLED(const byte bID[], byte bIDLength, byte bLEDstate[]);
+	
+	inline byte setLED(byte bLEDstate);
+	inline byte setLED(byte bID, byte bLEDstate);
+	inline byte setLED(const byte bID[], byte bIDLength, byte bLEDstate);
+	inline byte setLED(const byte bID[], byte bIDLength, const byte bLEDstate[]);
+	
+	/*
+	inline byte getDGain(byte bID);
+	inline byte getIGain(byte bID);
+	inline byte getPGain(byte bID);
+	*/
+	
 	inline word getPosition(byte bID);
 	inline void getPosition(const byte bID[], byte bIDLength, word wPosition[]);
 	
@@ -107,9 +134,22 @@ public:
 	inline byte setLoad(const byte bID[], byte bIDLength, word wLoad);
 	inline byte setLoad(const byte bID[], byte bIDLength, const word wLoad[]);
 	
-	inline byte isID(byte bID);
-	byte isID(const byte bID[], byte bIDLength);
-	void isID(const byte bID[], byte bIDLength, byte bBoolean[]);
+	/*
+	inline byte getTemperature(byte bID);
+	inline byte isRegistered(byte bID);
+	*/
+	
+	inline byte isMoving(byte bID);
+	byte isMoving(const byte bID[], byte bIDLength);
+	inline void isMoving(const byte bID[], byte bIDLength, byte bBoolean[]);
+	
+	/*
+	inline byte isLocked(byte bID);
+	inline word getPunch(byte bID);
+	inline word getCurrent(byte bID);
+	inline word getGoalTorque(byte bID);
+	inline byte getGoalAcceleration(byte bID);
+	*/
 	
 	inline byte setJointMode(void);
 	byte setJointMode(byte bID);
@@ -139,9 +179,6 @@ public:
 	byte isMultiTurnMode(byte bID);
 	void isMultiTurnMode(const byte bID[], byte bIDLength, byte bBoolean[]);
 	*/
-	inline byte isMoving(byte bID);
-	byte isMoving(const byte bID[], byte bIDLength);
-	inline void isMoving(const byte bID[], byte bIDLength, byte bBoolean[]);
 	
 	inline byte zeroSpeed(void);
 	inline byte zeroSpeed(byte bID);
