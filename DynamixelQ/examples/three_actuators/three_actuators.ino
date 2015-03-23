@@ -2,7 +2,7 @@
  *	three_actuators.ino
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-20-15
+ *	Created: 8-24-14, modified: 3-22-15
  */
 
 #include "DynamixelQ.h"
@@ -65,10 +65,10 @@ void setup()
   // Check if specified actuator_ids exist and are communicating
   for (i = 0; i < NUM_ACTUATORS; i++) {
     while (!Dxl.isID(actuator_ids[i])) {
-      USBprintf("Actuator ID %u not found. Looking...\n",actuator_ids[i]);
+      USBprintf("Actuator ID %u not found. Looking...\n", actuator_ids[i]);
       delay(2000);
     }
-    USBprintf("Actuator ID %u found... ",actuator_ids[i]);
+    USBprintf("Actuator ID %u found... ", actuator_ids[i]);
   }
 
   // Set DXL_RETURN_DELAY_TIME to 0 ms on actuator_ids

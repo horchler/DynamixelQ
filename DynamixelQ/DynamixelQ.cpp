@@ -2,7 +2,7 @@
  *	DynamixelQ.cpp
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 3-20-15
+ *	Created: 8-13-14, modified: 3-22-15
  *
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -406,11 +406,11 @@ byte DynamixelQ::syncWrite(const byte bStartAddress, const word wData[], const b
  *	function does not actually use the SYNC_WRITE instruction as it is unnecessary for
  *	writing to a single ID.
  */
-byte DynamixelQ::syncWrite(const byte bID, const byte bStartAddress, const word wData[], const byte bNumDataPerID)
+byte DynamixelQ::syncWrite(const byte bID, const byte bStartAddress, const word wData[], const byte bNumData)
 {
 	byte i, buff_idx = 0;
 	
-	if (bNumDataPerID == 1) {
+	if (bNumData == 1) {
 		if (this->isAddressWord(bStartAddress)) {
 			return this->writeWord(bID, bStartAddress, wData[0]);
 		} else if (this->isAddressByte(bStartAddress)) {
@@ -420,7 +420,7 @@ byte DynamixelQ::syncWrite(const byte bID, const byte bStartAddress, const word 
 		}
 	} else {
 		this->mParamBuffer[0] = bStartAddress;
-		for (i = 0; i < bNumDataPerID; i++) {
+		for (i = 0; i < bNumData; i++) {
 			if (this->isAddressWord(bStartAddress+buff_idx)) {
 				this->mParamBuffer[++buff_idx] = DXL_LOBYTEQ(wData[i]);
 				this->mParamBuffer[++buff_idx] = DXL_HIBYTEQ(wData[i]);
@@ -499,16 +499,16 @@ byte DynamixelQ::syncWrite(const byte bID[], const byte bIDLength, const byte bS
  */
 void DynamixelQ::writeRaw(const uint8 value)
 {
-	this->nsDelay(800);
+	this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
 	this->dxlTxEnable();	// Call dxlTxEnable() before write operations
 	this->mDxlUsart->regs->DR = (value & DXL_USART_DR_PARITY_MASK);
 	while ((this->mDxlUsart->regs->SR & USART_SR_TC) == RESET);
 	this->dxlTxDisable();	//Call dxlTxDisable() after writing finished
 }
 
-void DynamixelQ::writeRaw(const uint8 *value, uint8 len)
+void DynamixelQ::writeRaw(const uint8 *value, byte len)
 {
-	this->nsDelay(800);
+	this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
 	this->dxlTxEnable();
 	while (len > 1) {
 		this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);

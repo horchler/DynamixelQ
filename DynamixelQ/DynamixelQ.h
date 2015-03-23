@@ -2,7 +2,7 @@
  *	DynamixelQ.h
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 3-20-15
+ *	Created: 8-13-14, modified: 3-22-15
  *
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -21,12 +21,18 @@ public:
 	virtual ~DynamixelQ(void);
 	
 	void begin(byte baud);
-	/*
-	byte available(void);
-	byte readRaw(void);
-	void writeRaw(const byte bValue);
-	void writeRaw(const uint8 *value, uint8 len);
-	*/
+	
+	inline byte available(void) __attribute__((always_inline))
+	{
+		return this->mDxlDevice->write_pointer != this->mDxlDevice->read_pointer;
+	}
+	inline uint8 readRaw(void) __attribute__((always_inline))
+	{
+		return this->mDxlDevice->data_buffer[this->mDxlDevice->read_pointer++ & DXL_RX_BUF_SIZE];
+	}
+	void writeRaw(uint8 value);
+	void writeRaw(const uint8 *value, byte len);
+	
 	byte readByte(byte bID, byte bAddress);
 	void readByte(const byte bID[], byte bIDLength, byte bAddress, byte bData[]);
 	void readByte(const byte bID[], byte bIDLength, const byte bAddress[], byte bData[]);
@@ -48,8 +54,8 @@ public:
 	void syncRead(const byte bID, byte bStartAddress, byte bNumAddress, word wData[]);
 	void syncRead(const byte bID[], byte bIDLength, byte bStartAddress, byte bNumAddress, word wData[]);
 	
-	byte syncWrite(byte bStartAddress, const word wData[], byte bNumDataPerID);
-	byte syncWrite(byte bID, byte bStartAddress, const word wData[], byte bNumDataPerID);
+	byte syncWrite(byte bStartAddress, const word wData[], byte bNumData);
+	byte syncWrite(byte bID, byte bStartAddress, const word wData[], byte bNumData);
 	byte syncWrite(const byte bID[], byte bIDLength, byte bStartAddress, const word wData[], byte bNumDataPerID, byte bDataLength);
 	
 	// DXL_Utils
@@ -62,9 +68,9 @@ public:
 	byte getReturnDelay(byte bID);
 	void getReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay[]);
 	*/
-	byte setReturnDelay(byte bReturnDelay);
-	byte setReturnDelay(byte bID, byte bReturnDelay);
-	byte setReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay);
+	inline byte setReturnDelay(byte bReturnDelay);
+	inline byte setReturnDelay(byte bID, byte bReturnDelay);
+	inline byte setReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay);
 	byte setReturnDelay(const byte bID[], byte bIDLength, byte bReturnDelay[]);
 	/*
 	word getCWAngleLimit(byte bID);
@@ -77,40 +83,43 @@ public:
 	byte getAlarmLED(byte bID);
 	byte getAlarmShutdown(byte bID);
 	*/
-	word getPosition(byte bID);
-	void getPosition(const byte bID[], byte bIDLength, word wPosition[]);
+	inline word getPosition(byte bID);
+	inline void getPosition(const byte bID[], byte bIDLength, word wPosition[]);
 	
-	byte setPosition(word wPosition);
-	byte setPosition(byte bID, word wPosition);
-	byte setPosition(const byte bID[], byte bIDLength, word wPosition);
-	byte setPosition(const byte bID[], byte bIDLength, const word wPosition[]);
+	inline byte setPosition(word wPosition);
+	inline byte setPosition(byte bID, word wPosition);
+	inline byte setPosition(const byte bID[], byte bIDLength, word wPosition);
+	inline byte setPosition(const byte bID[], byte bIDLength, const word wPosition[]);
 	
-	word getSpeed(byte bID);
-	void getSpeed(const byte bID[], byte bIDLength, word wSpeed[]);
+	inline word getSpeed(byte bID);
+	inline void getSpeed(const byte bID[], byte bIDLength, word wSpeed[]);
 	
-	byte setSpeed(word wSpeed);
-	byte setSpeed(byte bID, word wSpeed);
-	byte setSpeed(const byte bID[], byte bIDLength, word wSpeed);
-	byte setSpeed(const byte bID[], byte bIDLength, const word wSpeed[]);
+	inline byte setSpeed(word wSpeed);
+	inline byte setSpeed(byte bID, word wSpeed);
+	inline byte setSpeed(const byte bID[], byte bIDLength, word wSpeed);
+	inline byte setSpeed(const byte bID[], byte bIDLength, const word wSpeed[]);
 	
-	word getLoad(byte bID);
-	void getLoad(const byte bID[], byte bIDLength, word wLoad[]);
+	inline word getLoad(byte bID);
+	inline void getLoad(const byte bID[], byte bIDLength, word wLoad[]);
 	
-	byte setLoad(word wLoad);
-	byte setLoad(byte bID, word wLoad);
-	byte setLoad(const byte bID[], byte bIDLength, word wLoad);
-	byte setLoad(const byte bID[], byte bIDLength, const word wLoad[]);
+	inline byte setLoad(word wLoad);
+	inline byte setLoad(byte bID, word wLoad);
+	inline byte setLoad(const byte bID[], byte bIDLength, word wLoad);
+	inline byte setLoad(const byte bID[], byte bIDLength, const word wLoad[]);
 	
+	inline byte isID(byte bID);
+	byte isID(const byte bID[], byte bIDLength);
+	void isID(const byte bID[], byte bIDLength, byte bBoolean[]);
 	
-	byte setJointMode(void);
+	inline byte setJointMode(void);
 	byte setJointMode(byte bID);
 	byte setJointMode(const byte bID[], byte bIDLength);
 	
-	byte setWheelMode(void);
+	inline byte setWheelMode(void);
 	byte setWheelMode(byte bID);
 	byte setWheelMode(const byte bID[], byte bIDLength);
 	
-	byte setMultiTurnMode(void);
+	inline byte setMultiTurnMode(void);
 	byte setMultiTurnMode(byte bID);
 	byte setMultiTurnMode(const byte bID[], byte bIDLength);
 	/*
@@ -120,11 +129,7 @@ public:
 	
 	byte getMode(byte bID);
 	void getMode(const byte bID[], byte bIDLength, byte bMode[]);
-	*/
-	byte isID(byte bID);
-	byte isID(const byte bID[], byte bIDLength);
-	void isID(const byte bID[], byte bIDLength, byte bBoolean[]);
-	/*
+	
 	byte isJointMode(byte bID);
 	void isJointMode(const byte bID[], byte bIDLength, byte bBoolean[]);
 	
@@ -134,13 +139,13 @@ public:
 	byte isMultiTurnMode(byte bID);
 	void isMultiTurnMode(const byte bID[], byte bIDLength, byte bBoolean[]);
 	*/
-	byte isMoving(byte bID);
+	inline byte isMoving(byte bID);
 	byte isMoving(const byte bID[], byte bIDLength);
-	void isMoving(const byte bID[], byte bIDLength, byte bBoolean[]);
+	inline void isMoving(const byte bID[], byte bIDLength, byte bBoolean[]);
 	
-	byte zeroSpeed(void);
-	byte zeroSpeed(byte bID);
-	byte zeroSpeed(const byte bID[], byte bIDLength);
+	inline byte zeroSpeed(void);
+	inline byte zeroSpeed(byte bID);
+	inline byte zeroSpeed(const byte bID[], byte bIDLength);
 private:
 	/*
 	 *	Convert Dynamixel Data value to BPS value
@@ -188,15 +193,6 @@ private:
 		return (bAddress < DXL_NUM_ADDRESS && DXL_ADDRESS_TYPE[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
 	}
 	
-	inline byte available(void) __attribute__((always_inline))
-	{
-		return this->mDxlDevice->write_pointer != this->mDxlDevice->read_pointer;
-	}
-	inline byte readRaw(void) __attribute__((always_inline))
-	{
-		return this->mDxlDevice->data_buffer[this->mDxlDevice->read_pointer++ & DXL_RX_BUF_SIZE];
-	}
-	
 	inline void dxlTxEnable(void) __attribute__((always_inline))
 	{
 		if (this->mDirPort == 0) {
@@ -217,9 +213,6 @@ private:
 	{
 		this->mDxlDevice->read_pointer = this->mDxlDevice->write_pointer = 0;
 	}
-	
-	void writeRaw(uint8 value);
-	void writeRaw(const uint8 *value, uint8 len);
 	
 	void txPacket(byte bID, byte bInstruction, byte bParameterLength);
 	byte rxPacket(byte bID, byte bRxLength);

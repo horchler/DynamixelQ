@@ -2,7 +2,7 @@
  *	DXL_Defines.h
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 3-8-15, modified: 3-20-15
+ *	Created: 3-8-15, modified: 3-22-15
  */
  
 #ifndef DXL_DEFINES_H_
@@ -51,6 +51,10 @@
 #define DXL_MAX_LIMIT_VOLTAGE 0x96
 #define DXL_MV_PER_LIMIT_VOLTAGE 100
 
-#define DXL_PERCENT_MAX_TORQUE_PER_LOAD_MAGNITUDE (1.0/DXL_MX_MAX_TORQUE_LIMIT)
+// TODO. These two items must be manually changed to properly handle AX-series actuators
+#define DXL_POSITION_RESOLUTION DXL_MX_POSITION_RESOLUTION
+#define DXL_MAX_TORQUE_LIMIT DXL_MX_MAX_TORQUE_LIMIT
+
+#define DXL_PERCENT_MAX_TORQUE_PER_LOAD_MAGNITUDE (1.0/DXL_MAX_TORQUE_LIMIT)
 
 #endif /* DXL_DEFINES_H_ */

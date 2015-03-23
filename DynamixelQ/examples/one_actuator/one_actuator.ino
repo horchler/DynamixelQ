@@ -2,7 +2,7 @@
  *	one_actuator.ino
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-20-15
+ *	Created: 8-24-14, modified: 3-22-15
  */
 
 #include "DynamixelQ.h"
@@ -13,7 +13,7 @@
 DynamixelQ Dxl(DXL_MX64);
 
 // Specify ID of Dynamixel
-#define ACTUTATOR_ID 8
+#define ACTUATOR_ID 1
 
 // Elapsed time in microsceonds 
 unsigned long usElapsed(void)
@@ -59,21 +59,21 @@ void setup()
   Dxl.zeroSpeed();
   delay(1000);
   
-  // Check if specified ACTUTATOR_ID exists and is communicating
-  while (!Dxl.isID(ACTUTATOR_ID)) {
-    USBprintf("Actuator ID %u not found. Looking...\n",ACTUTATOR_ID);
+  // Check if specified ACTUATOR_ID exists and is communicating
+  while (!Dxl.isID(ACTUATOR_ID)) {
+    USBprintf("Actuator ID %u not found. Looking...\n", ACTUATOR_ID);
     delay(2000);
   }
-  USBprintf("Actuator ID %u found... ",ACTUTATOR_ID);
+  USBprintf("Actuator ID %u found... ", ACTUATOR_ID);
   
-  // Set DXL_RETURN_DELAY_TIME to 0 ms on ACTUTATOR_ID
-  Dxl.setReturnDelay(ACTUTATOR_ID, return_delay);
+  // Set DXL_RETURN_DELAY_TIME to 0 ms on ACTUATOR_ID
+  Dxl.setReturnDelay(ACTUATOR_ID, return_delay);
   
-  // Set DXL_CW_ANGLE_LIMIT, DXL_CCW_ANGLE_LIMIT, and DXL_TORQUE_LIMIT on ACTUTATOR_ID to specify wheel mode
-  Dxl.setWheelMode(ACTUTATOR_ID);
+  // Set DXL_CW_ANGLE_LIMIT, DXL_CCW_ANGLE_LIMIT, and DXL_TORQUE_LIMIT on ACTUATOR_ID to specify wheel mode
+  Dxl.setWheelMode(ACTUATOR_ID);
   
-  // Initialize DXL_MOVING_SPEED of ACTUTATOR_ID
-  Dxl.setSpeed(ACTUTATOR_ID, init_speed);
+  // Initialize DXL_MOVING_SPEED of ACTUATOR_ID
+  Dxl.setSpeed(ACTUATOR_ID, init_speed);
   USBprintf("Initialized.\n");
   delay(1000);
 }
@@ -89,22 +89,22 @@ void loop()
   // Elapsed time for printing and reset timer
   print_duration = usElapsed();
   
-  // Read present position, speed, and load from ACTUTATOR_ID and store in array
+  // Read present position, speed, and load from ACTUATOR_ID and store in array
   // Alternative options commented out
-  Dxl.syncRead(ACTUTATOR_ID, start_addr, num_addr, position_speed_load_data);
+  Dxl.syncRead(ACTUATOR_ID, start_addr, num_addr, position_speed_load_data);
   /*
   byte position_speed_load_addr[3] = {DXL_PRESENT_POSITION,DXL_PRESENT_SPEED,DXL_PRESENT_LOAD};
-  position_speed_load_data[0] = Dxl.readWord(ACTUTATOR_ID, position_speed_load_addr[0]);
-  position_speed_load_data[1] = Dxl.readWord(ACTUTATOR_ID, position_speed_load_addr[1]);
-  position_speed_load_data[2] = Dxl.readWord(ACTUTATOR_ID, position_speed_load_addr[2]);
+  position_speed_load_data[0] = Dxl.readWord(ACTUATOR_ID, position_speed_load_addr[0]);
+  position_speed_load_data[1] = Dxl.readWord(ACTUATOR_ID, position_speed_load_addr[1]);
+  position_speed_load_data[2] = Dxl.readWord(ACTUATOR_ID, position_speed_load_addr[2]);
   */
   /*
-  position_speed_load_data[0] = Dxl.getPosition(ACTUTATOR_ID);
-  position_speed_load_data[1] = Dxl.getSpeed(ACTUTATOR_ID);
-  position_speed_load_data[2] = Dxl.getLoad(ACTUTATOR_ID);
+  position_speed_load_data[0] = Dxl.getPosition(ACTUATOR_ID);
+  position_speed_load_data[1] = Dxl.getSpeed(ACTUATOR_ID);
+  position_speed_load_data[2] = Dxl.getLoad(ACTUATOR_ID);
   */
   /*
-  byte actuator_ids[3] = {ACTUTATOR_ID,ACTUTATOR_ID,ACTUTATOR_ID}, num_ids = 3;
+  byte actuator_ids[3] = {ACTUATOR_ID,ACTUATOR_ID,ACTUATOR_ID}, num_ids = 3;
   byte position_speed_load_addr[3] = {DXL_PRESENT_POSITION,DXL_PRESENT_SPEED,DXL_PRESENT_LOAD};
   Dxl.readWord(actuator_ids, num_ids, position_speed_load_addr, position_speed_load_data);
   */
