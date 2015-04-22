@@ -2,20 +2,13 @@
  *	USBprint.cpp
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-8-15
+ *	Created: 8-24-14, modified: 3-22-15
  */
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <string.h>
-#include "systick.h"
 #include "ee_printf.h"
 #include "USBprint.h"
-
-inline int USBprintReady()
-{
-	return usbIsConnected() && usbIsConfigured();
-}
 
 int USBsprint(char *str, size_t n, const char *fmt, ...)
 {
@@ -207,27 +200,4 @@ int USBprintfLite(const char *fmt, ...)
 	
 	usbSendBytes((const uint8*)buff, len);
 	return len;
-}
-
-inline int USBprintStr(const char *str)
-{
-	int len;
-	
-	len = strlen(str);
-	if (USBprintReady() && len > 0) {
-		usbSendBytes((const uint8*)str, len);
-		return len;
-	} else {
-		return 0;
-	}
-}
-
-inline int USBprintRaw(const uint8 *dat, const int datlen)
-{
-	if (USBprintReady() && datlen > 0) {
-		usbSendBytes(dat, datlen);
-		return datlen;
-	} else {
-		return 0;
-	}
 }

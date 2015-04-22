@@ -2,13 +2,13 @@
  *	USBprint.h
  *
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-8-15
+ *	Created: 8-24-14, modified: 3-22-15
  */
  
 #ifndef USBPRINT_H
 #define USBPRINT_H
 
-#include <stdlib.h>
+#include <string.h>
 #include "usb.h"
 
 #ifndef USBPRINT_BUFFER_SIZE
@@ -19,6 +19,10 @@
  *  Return 1 if USB serial is connected and configured, 0 otherwise.
  */
 inline int USBprintReady() __attribute__((always_inline));
+inline int USBprintReady()
+{
+	return usbIsConnected() && usbIsConfigured();
+}
 
 /*
  *	Fast general print functions without floating-point support using vsniprintf to
@@ -59,13 +63,47 @@ int USBsprintfLite(char *str, const char *fmt, ...);
  *  function only supports character string inputs. The number of bytes written is
  *	returned.
  */
-inline int USBprintStr(const char *str);
+inline int USBprintStr(const char *str)
+{
+	int len;
+	
+	len = strlen(str);
+	if (USBprintReady() && len > 0) {
+		usbSendBytes((const uint8*)str, len);
+		return len;
+	} else {
+		return 0;
+	}
+}
+
+/*
+ *	Print raw uint8 byte. This low-level function only supports character input that has
+ *	already been converted to raw unsigned 8-bit data. The number of bytes successfully
+ *	written is returned.
+ */
+inline int USBprintRaw(const uint8 dat)
+{
+	if (USBprintReady()) {
+		usbSendBytes(&dat, 1);
+		return 1;
+	} else {
+		return 0;
+	}
+}
 
 /*
  *	Print array of raw uint8 bytes of given length. This low-level function only supports
  *	character string inputs that have already been converted to raw unsigned 8-bit data. 
- *	The number of bytes written is returned.
+ *	The number of bytes successfully written is returned.
  */
-inline int USBprintRaw(const uint8 *dat, int datlen);
+inline int USBprintRaw(const uint8 *dat, const int datlen)
+{
+	if (USBprintReady() && datlen > 0) {
+		usbSendBytes(dat, datlen);
+		return datlen;
+	} else {
+		return 0;
+	}
+}
 
 #endif /* USBPRINT_H */
