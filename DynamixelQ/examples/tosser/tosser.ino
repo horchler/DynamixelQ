@@ -1,23 +1,20 @@
 /*
  *	tosser.ino
- *
+ *	
+ *	Simple tosser. Read available bytes from USB serial port and write them directly to
+ *	Dynamixel serial bus. Read available bytes from Dynamixel serial bus and write them
+ *	directly to the USB serial port. Note that USBprint is used to print character strings
+ *	to the USB serial port during initialization.
+ *	
+ *	Actuators must be MX Series actuators. Change the baud rate to DXL_BAUD_1000000 or
+ *	less to handle AX Series actuators or mixed types.
+ *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 3-22-15, modified: 3-22-15
+ *	Created: 3-22-15, modified: 4-22-15
  */
 
 #include "DynamixelQ.h"
-#include "DXL_Utils.h"
 #include "USBprint.h"
-
-// Instantiate DynamixelQ object for MX-64 actuators
-DynamixelQ Dxl(DXL_MX64);
-
-void blinkOnce(void)
-{
-  digitalWrite(BOARD_LED_PIN, LOW);
-  delay_us(100);
-  digitalWrite(BOARD_LED_PIN, HIGH);
-}
 
 void setup()
 {
@@ -25,7 +22,7 @@ void setup()
   
   // Start communicating with actuators at 3 Mbps
   Dxl.begin(DXL_BAUD_3000000);
-  delay(3000);
+  delay(1000);
   USBprint("\nInitializing... ");
   
   // Stop all actuators in case any are moving
@@ -35,8 +32,7 @@ void setup()
   // Set DXL_RETURN_DELAY_TIME to 0 ms on all actuators
   Dxl.setReturnDelay(return_delay);
   
-  pinMode(BOARD_LED_PIN, OUTPUT);
-  blinkOnce();
+  Board.blinkOnce(1e6);
   delay(1000);
   USBprint("Initialized.\n");
 }
@@ -47,13 +43,15 @@ void loop()
   
   if (usbBytesAvailable()) {
     USBdata = SerialUSB.read();
-    blinkOnce();
+    Board.blinkOnce(100);
+    delay_us(100);
     Dxl.writeRaw(USBdata);
   }
   
   if (Dxl.available()) {
     DXLdata = Dxl.readRaw();
-    blinkOnce();
+    Board.blinkOnce(100);
+    delay_us(100);
     USBprintRaw(DXLdata);
   }  
 }

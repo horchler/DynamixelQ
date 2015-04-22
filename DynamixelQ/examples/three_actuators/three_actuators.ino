@@ -1,16 +1,19 @@
 /*
  *	three_actuators.ino
- *
+ *	
+ *	Run Actuator IDs 1, 2, and 3 at three different constant speeds in wheel mode. Read
+ *	position, speed, and load from each. Use USBprint to print read data and timing
+ *	statistics to the USB serial port.
+ *	
+ *	Actuator IDs 1, 2, and 3 must be MX Series actuators. Change the baud rate to
+ *	DXL_BAUD_1000000 or less to handle AX Series actuators or mixed types.
+ *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-22-15
+ *	Created: 8-24-14, modified: 4-22-15
  */
 
 #include "DynamixelQ.h"
-#include "DXL_Utils.h"
 #include "USBprint.h"
-
-// Instantiate DynamixelQ object for MX-64 actuators
-DynamixelQ Dxl(DXL_MX64);
 
 // Specify IDs of Dynamixels
 #define NUM_ACTUATORS 3
@@ -51,11 +54,11 @@ inline double movingAverge(double Yt)
 void setup()
 {
   byte i, return_delay = 0;
-  word init_speeds[NUM_SERVOS] = {100,200,300};
+  word init_speeds[NUM_ACTUATORS] = {100,200,300};
   
   // Start communicating with actuators at 3 Mbps
   Dxl.begin(DXL_BAUD_3000000);
-  delay(3000);
+  delay(1000);
   USBprintf("\nInitializing... ");
   
   // Stop all actuators in case any are moving

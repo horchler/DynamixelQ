@@ -1,7 +1,7 @@
 DynamixelQ
 ==========
 #####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) using the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
-######Version 1.1, 10-23-14######
+######Version 1.2, 4-22-15######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
 Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm.htm).
@@ -15,14 +15,14 @@ Features and benefits vs. the default library
  - Added functions that automatically check if register addresses are bytes, words, or invalid.
  - Functions redesigned to use strict byte and word input arguments to catch errors at compile time.
  - Added [fast, flexible ```printf```-style functions](https://github.com/horchler/DynamixelQ/blob/master/USBprint) to replace ```SerialUSB.print```.
+ - Added easy-to-use [timer-based asynchronous blink, fade, and button functions](https://github.com/horchler/DynamixelQ/blob/master/DynamixelQ/DXL_Board.h) for the status LED and user switch on the OpenCM9.04 board.
  - Cleaned up code to improve readability and use consistent style: removed code for boards other than OpenCM9.04 and actuators other than AX and MX series, Removed debug code and code related to 2.0 protocol.
  - Fixed [checksum bug](http://www.robotis.com/xe/?mid=qna_en&document_srl=1140665&comment_srl=1144814&rnd=1144814#comment_1144814).
  - Many other optimizations and improvements.
  
 Current limitations
  - Only MX-64, AX-12, and AX-18 actuators have been specifically tested.
- - Using AX and MX series actuators together is currently not supported. 
- - Some higher-level functions, have been removed (see [```DXL_Utils.h```](https://github.com/horchler/DynamixelQ/blob/master/DynamixelQ/DXL_Utils.h)). Improved versions of these will be added in the future. 
+ - More documentation and commenting needed.
  - More and better examples needed.
 
 Installation
@@ -30,6 +30,7 @@ Installation
  2. Download and expand the [ZIP archive of the DynamixelQ repository](https://github.com/horchler/DynamixelQ/archive/master.zip). In the resultant *DynamixelQ-master* folder there two libraries: *DynamixelQ* and *USBprint*.
  3. Locate the *Libraries* folder for the ROBOTIS_OpenCM IDE and place the *DynamixelQ* and *USBprint* library folders there. On OS X, this folder is in *Documents/ROBOTIS/*. On Windows, it is located at *Documents\ROBOTIS\* (or possibly *My Documents\ROBOTIS\*).
  4. Relaunch the ROBOTIS_OpenCM IDE. "DynamixelQ" should now appear under *File > Examples* and *Sketch > Import Library...*.
+ 5. Minor edits and bug reports and fixes can be submitted by [filing an issue](https://github.com/horchler/DynamixelQ/issues) or via email. To add new functionality or make propose major changes, please [fork the repository](https://help.github.com/articles/fork-a-repo). Any new features should be accompanied by some means of testing. Email or file an issue if you have any questions.
 
 --------
 
@@ -52,7 +53,7 @@ How to write from the OpenCM9.04 to PC via USB at high speed
 Acknowledgment of support: This material is based upon work supported by the [National Science Foundation](http://www.nsf.gov/) under [Grant No.&nbsp;1065489](http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=1065489). Disclaimer: Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.  
 &nbsp;  
 
-Copyright &copy; 2014, Andrew D. Horchler  
+Copyright &copy; 2014&ndash;2015, Andrew D. Horchler  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

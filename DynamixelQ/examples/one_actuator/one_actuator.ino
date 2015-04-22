@@ -1,16 +1,18 @@
 /*
  *	one_actuator.ino
- *
+ *	
+ *	Run Actuator ID 1 at constant speed in wheel mode. Read position, speed, and load.
+ *	Use USBprint to print read data and timing statistics to the USB serial port.
+ *	
+ *	Actuator ID 1 must be an MX Series actuator. Change the baud rate to DXL_BAUD_1000000
+ *	or less to handle AX Series actuators or mixed types.
+ *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-22-15
+ *	Created: 8-24-14, modified: 4-22-15
  */
 
 #include "DynamixelQ.h"
-#include "DXL_Utils.h"
 #include "USBprint.h"
-
-// Instantiate DynamixelQ object for MX-64 actuators
-DynamixelQ Dxl(DXL_MX64);
 
 // Specify ID of Dynamixel
 #define ACTUATOR_ID 1
@@ -52,7 +54,7 @@ void setup()
   
   // Start communicating with actuators at 3 Mbps
   Dxl.begin(DXL_BAUD_3000000);
-  delay(3000);
+  delay(1000);
   USBprintf("\nInitializing... ");
   
   // Stop all actuators in case any are moving
