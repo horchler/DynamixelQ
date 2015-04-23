@@ -2,7 +2,7 @@
  *	DXLQ.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-22-15
+ *	Created: 8-13-14, modified: 4-23-15
  *	
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -658,7 +658,7 @@ byte DXLQ::txRxPacket(const byte bID, const DXL_INSTRUCTION bInst, const byte bT
 	}
 	this->txPacket(bID, bInst, bTxParaLen);
 	
-	if (bInst == INST_PING || bInst == INST_FACTORY_RESET){
+	if (bInst == INST_PING || bInst == INST_FACTORY_RESET) {
 		bRxLenEx = (bID == BROADCAST_ID) ? 0xFF : DXL_PACKET_HEADER_LENGTH;
 	} else if (bInst == INST_READ) {
 		bRxLenEx = DXL_PACKET_HEADER_LENGTH+this->mParamBuffer[1];

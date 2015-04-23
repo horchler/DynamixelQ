@@ -2,7 +2,7 @@
  *	DXL_Validate.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 4-12-15, modified: 4-22-15
+ *	Created: 4-12-15, modified: 4-23-15
  */
 
 #ifndef DXL_VALIDATE_H_
@@ -52,8 +52,9 @@ inline DXL_SERIES DXLQ::getSeries(const byte bID)
 		switch(this->dxl_ModelNumber[bID]) {
 			case DXL_AX12:
 			case DXL_AX18:
+			case DXL_AX12W:
 				return DXL_AX_SERIES;
-			case DXL_MX12:
+			case DXL_MX12W:
 			case DXL_MX28:
 			case DXL_MX64:
 			case DXL_MX106:
@@ -81,8 +82,9 @@ inline DXL_SERIES_TYPE DXLQ::getSeriesType(const byte bID)
 		switch(this->dxl_ModelNumber[bID]) {
 			case DXL_AX12:
 			case DXL_AX18:
+			case DXL_AX12W:
 				return DXL_AX_SERIES_TYPE;
-			case DXL_MX12:
+			case DXL_MX12W:
 			case DXL_MX28:
 				return DXL_MX_SERIES_BASIC;
 			case DXL_MX64:

@@ -2,7 +2,7 @@
  *	DXL_MX.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-21-15
+ *	Created: 8-13-14, modified: 4-23-15
  */
 
 #ifndef DXL_MX_H_
@@ -10,10 +10,10 @@
 
 // MX Series model numbers
 enum DXL_MX_MODELS{
-	DXL_MX12  = 104,
-	DXL_MX28  =  29,
-	DXL_MX64  =  54,
-	DXL_MX106 =  64
+	DXL_MX12W = uint16(360), // 0x0168
+	DXL_MX28  =  uint16(29), // 0x001D
+	DXL_MX64  = uint16(310), // 0x0136
+	DXL_MX106 = uint16(320)  // 0x0140
 };
 
 #define DXL_MX_NUM_ADDRESS DXL_NUM_ADDRESS

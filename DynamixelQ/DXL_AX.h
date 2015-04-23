@@ -2,7 +2,7 @@
  *	DXL_AX.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-21-15
+ *	Created: 8-13-14, modified: 4-23-15
  */
 
 #ifndef DXL_AX_H_
@@ -10,8 +10,9 @@
 
 // AX Series model numbers
 enum DXL_AX_MODELS{
-	DXL_AX12 = 44,
-	DXL_AX18 = 18
+	DXL_AX12  =  uint16(12), // 0x000C
+	DXL_AX18  =  uint16(18), // 0x0012
+	DXL_AX12W = uint16(300)  // 0x012C
 };
 
 #define DXL_AX_NUM_ADDRESS uint8(0x31)
