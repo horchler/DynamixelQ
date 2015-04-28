@@ -1,6 +1,6 @@
 USBprint
 ==========
-#####A Library for fast convenient *printf style printing with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
+#####A Library for fast convenient ```printf```-style printing with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
 ######Version 1.1, 4-28-15######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/USBprint/archive/master.zip)#####
 
