@@ -4,11 +4,14 @@ USBprint
 ######Version 1.1, 4-28-15######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/USBprint/archive/master.zip)#####
 
-Features and benefits vs. the default ```SerialUSB.print```
- - 
+Features and benefits of ```printf```-style functions vs. the default ```SerialUSB.print```
+ - The ability to convert and transmit multiple values all at once results in faster communication.
+ - Better floating point conversions.
+ - More data types and conversions are supported.
+ - More readable code.
  
 Current limitations
- - Examples needed.
+ - Examples and testing needed.
 
 Installation
  1. Quit the ROBOTIS_OpenCM IDE application.
