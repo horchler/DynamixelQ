@@ -1,12 +1,12 @@
 /*
  *	USBprint.h
- *
+ *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 3-22-15
+ *	Created: 8-24-14, modified: 4-28-15
  */
  
-#ifndef USBPRINT_H
-#define USBPRINT_H
+#ifndef USBPRINT_H_
+#define USBPRINT_H_
 
 #include <string.h>
 #include "usb.h"
@@ -106,4 +106,4 @@ inline int USBprintRaw(const uint8 *dat, const int datlen)
 	}
 }
 
-#endif /* USBPRINT_H */
+#endif /* USBPRINT_H_ */

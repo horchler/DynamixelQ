@@ -1,7 +1,7 @@
 DynamixelQ
 ==========
 #####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) using the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
-######Version 1.2, 4-22-15######
+######Version 1.2, 4-28-15######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
 Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm.htm).
@@ -27,8 +27,8 @@ Current limitations
 
 Installation
  1. Quit the ROBOTIS_OpenCM IDE application.
- 2. Download and expand the [ZIP archive of the DynamixelQ repository](https://github.com/horchler/DynamixelQ/archive/master.zip). In the resultant *DynamixelQ-master* folder there two libraries: *DynamixelQ* and *USBprint*.
- 3. Locate the *Libraries* folder for the ROBOTIS_OpenCM IDE and place the *DynamixelQ* and *USBprint* library folders there. On OS X, this folder is in *Documents/ROBOTIS/*. On Windows, it is located at *Documents\ROBOTIS\* (or possibly *My Documents\ROBOTIS\*).
+ 2. Download and expand the [ZIP archive of the DynamixelQ repository](https://github.com/horchler/DynamixelQ/archive/master.zip). In the resultant *DynamixelQ-master* folder there are two libraries: *DynamixelQ* and *USBprint*.
+ 3. Locate the *libraries* folder for the ROBOTIS_OpenCM IDE and place the *DynamixelQ* and *USBprint* library folders there. On OS X, this folder is in *Documents/ROBOTIS/*. On Windows, it is located at *Documents\ROBOTIS\* (or possibly *My Documents\ROBOTIS\*).
  4. Relaunch the ROBOTIS_OpenCM IDE. "DynamixelQ" should now appear under *File > Examples* and *Sketch > Import Library...*.
  5. Minor edits and bug reports and fixes can be submitted by [filing an issue](https://github.com/horchler/DynamixelQ/issues) or via email. To add new functionality or make propose major changes, please [fork the repository](https://help.github.com/articles/fork-a-repo). Any new features should be accompanied by some means of testing. Email or file an issue if you have any questions.
 
