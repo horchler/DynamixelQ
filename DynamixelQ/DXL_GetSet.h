@@ -2,7 +2,7 @@
  *	DXL_GetSet.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 4-30-15
+ *	Created: 2-23-15, modified: 5-1-15
  */
  
 #ifndef DXL_GETSET_H_
@@ -481,7 +481,7 @@ byte DXL::setMultiTurnOffset(const byte bID[], const byte bIDLength, const word 
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -493,7 +493,7 @@ byte DXL::setMultiTurnOffset(const byte bID[], const byte bIDLength, word wMulti
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 		wMultiTurnOffset[i] = DXL_MIN(wMultiTurnOffset[i], DXL_MX_MAX_MULTI_TURN_OFFSET_MAGNITUDE);
@@ -530,7 +530,7 @@ byte DXL::setResolutionDivider(const byte bID[], const byte bIDLength, const byt
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -542,7 +542,7 @@ byte DXL::setResolutionDivider(const byte bID[], const byte bIDLength, byte bRes
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 		bResolutionDivider[i] = DXL_MIN(DXL_MAX(bResolutionDivider[i], DXL_MX_MIN_RESOLUTION_DIVIDER), DXL_MX_MAX_RESOLUTION_DIVIDER);
@@ -655,7 +655,7 @@ byte DXL::setCWComplianceMargin(const byte bID[], const byte bIDLength, const by
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -667,7 +667,7 @@ byte DXL::setCWComplianceMargin(const byte bID[], const byte bIDLength, const by
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -703,7 +703,7 @@ byte DXL::setCCWComplianceMargin(const byte bID[], const byte bIDLength, const b
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -715,7 +715,7 @@ byte DXL::setCCWComplianceMargin(const byte bID[], const byte bIDLength, const b
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -751,7 +751,7 @@ byte DXL::setCWComplianceSlope(const byte bID[], const byte bIDLength, const byt
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -763,7 +763,7 @@ byte DXL::setCWComplianceSlope(const byte bID[], const byte bIDLength, byte bCWC
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 		bCWComplianceSlope[i] = DXL_AX_COMPLIANCE_SLOPE(bCWComplianceSlope[i]);
@@ -800,7 +800,7 @@ byte DXL::setCCWComplianceSlope(const byte bID[], const byte bIDLength, const by
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -812,7 +812,7 @@ byte DXL::setCCWComplianceSlope(const byte bID[], const byte bIDLength, byte bCC
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_AX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_AX_SERIES) {
 			return DXL_FAILURE;
 		}
 		bCCWComplianceSlope[i] = DXL_AX_COMPLIANCE_SLOPE(bCCWComplianceSlope[i]);
@@ -849,7 +849,7 @@ byte DXL::setDGain(const byte bID[], const byte bIDLength, const byte bDGain)
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -861,7 +861,7 @@ byte DXL::setDGain(const byte bID[], const byte bIDLength, byte bDGain[])
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 		bDGain[i] = DXL_MIN(bDGain[i], DXL_MX_MAX_GAIN);
@@ -898,7 +898,7 @@ byte DXL::setIGain(const byte bID[], const byte bIDLength, const byte bIGain)
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -910,7 +910,7 @@ byte DXL::setIGain(const byte bID[], const byte bIDLength, byte bIGain[])
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 		bIGain[i] = DXL_MIN(bIGain[i], DXL_MX_MAX_GAIN);
@@ -947,7 +947,7 @@ byte DXL::setPGain(const byte bID[], const byte bIDLength, const byte bPGain)
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 	}
@@ -959,7 +959,7 @@ byte DXL::setPGain(const byte bID[], const byte bIDLength, byte bPGain[])
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+		if (!(this->isValidID(bID[i])) || this->getSeries(bID[i]) != DXL_MX_SERIES) {
 			return DXL_FAILURE;
 		}
 		bPGain[i] = DXL_MIN(bPGain[i], DXL_MX_MAX_GAIN);
@@ -1238,7 +1238,7 @@ byte DXL::setCurrent(const byte bID[], const byte bIDLength, const word wCurrent
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 	}
@@ -1250,7 +1250,7 @@ byte DXL::setCurrent(const byte bID[], const byte bIDLength, word wCurrent[])
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 		wCurrent[i] = DXL_MIN(wCurrent[i], DXL_MX_MAX_CURRENT);
@@ -1287,7 +1287,7 @@ byte DXL::setTorqueControlEnable(const byte bID[], const byte bIDLength, const b
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) == DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) == DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 	}
@@ -1299,7 +1299,7 @@ byte DXL::setTorqueControlEnable(const byte bID[], const byte bIDLength, byte bT
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 		bTorqueControlEnable[i] = !!bTorqueControlEnable[i];
@@ -1336,7 +1336,7 @@ byte DXL::setGoalTorque(const byte bID[], const byte bIDLength, const word wGoal
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 	}
@@ -1348,7 +1348,7 @@ byte DXL::setGoalTorque(const byte bID[], const byte bIDLength, word wGoalTorque
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 		wGoalTorque[i] = DXL_MIN(wGoalTorque[i], DXL_MX_MAX_GOAL_TORQUE);
@@ -1385,7 +1385,7 @@ byte DXL::setGoalAcceleration(const byte bID[], const byte bIDLength, const byte
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 	}
@@ -1397,7 +1397,7 @@ byte DXL::setGoalAcceleration(const byte bID[], const byte bIDLength, byte bGoal
 	byte i;
 	
 	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+		if (!(this->isValidID(bID[i])) || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
 			return DXL_FAILURE;
 		}
 		bGoalAcceleration[i] = DXL_MIN(bGoalAcceleration[i], DXL_MX_MAX_ACCELERATION);

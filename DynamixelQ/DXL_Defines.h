@@ -2,7 +2,7 @@
  *	DXL_Defines.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 3-8-15, modified: 4-22-15
+ *	Created: 3-8-15, modified: 5-1-15
  */
  
 #ifndef DXL_DEFINES_H_
@@ -81,29 +81,31 @@ enum DXL_ALARM_ERROR{
 #define DXL_MAX_ALARM_ERROR uint8(0x7F)
 
 // Communication messages
-#define	COMM_TXSUCCESS 0
-#define COMM_RXSUCCESS 1
-#define COMM_TXFAIL    2
-#define COMM_RXFAIL    3
-#define COMM_TXERROR   4
-#define COMM_RXWAITING 5
-#define COMM_RXTIMEOUT 6
-#define COMM_RXCORRUPT 7
+enum DXL_COMM_STATUS{
+	COMM_TXSUCCESS = 0,
+	COMM_RXSUCCESS,
+	COMM_TXFAIL,
+	COMM_RXFAIL,
+	COMM_TXERROR,
+	COMM_RXWAITING,
+	COMM_RXTIMEOUT,
+	COMM_RXCORRUPT
+};
 
-typedef enum DXL_BOOL{
+typedef enum DXL_BOOL_TYPE{
 	DXL_FALSE = 0,
 	DXL_TRUE
-} DXL_BOOL;
+} DXL_BOOL_TYPE;
 
-enum DXL_LED_STATE{
+typedef enum DXL_LED_STATE{
 	DXL_LED_OFF = 0,
 	DXL_LED_ON
-};
+} DXL_LED_STATE;
 
-enum DXL_RETURN{
+typedef enum DXL_RETURN_TYPE{
 	DXL_FAILURE = 0,
 	DXL_SUCCESS
-};
+} DXL_RETURN_TYPE;
 
 // DXL_STATUS_RETURN_LEVEL options
 enum DXL_STATUS_RETURN_VALUE{

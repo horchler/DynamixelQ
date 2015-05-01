@@ -2,18 +2,54 @@
  *	DXL_Validate.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 4-12-15, modified: 4-30-15
+ *	Created: 4-12-15, modified: 5-1-15
  */
 
 #ifndef DXL_VALIDATE_H_
 #define DXL_VALIDATE_H_
 
-inline DXL_BOOL DXL::isInit(const byte bID)
+inline DXL_BOOL_TYPE DXL::isValidActuatorID(const byte bID)
 {
-	return (bID <= DXL_MAX_ID && this->dxl_isActuatorID[bID]) ? DXL_TRUE : DXL_FALSE;
+	return DXL_BOOL_TYPE(bID <= DXL_MAX_ID);
 }
 
-void DXL::isInit(const byte bID[], const byte bIDLength, DXL_BOOL bIsInit[])
+DXL_BOOL_TYPE DXL::allValidActuatorID(const byte bID[], const byte bIDLength)
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		if (!(this->isValidActuatorID(bID[i]))) {
+			return DXL_FALSE;
+		}
+	}
+	return DXL_TRUE;
+}
+
+
+inline DXL_BOOL_TYPE DXL::isValidID(const byte bID)
+{
+	return DXL_BOOL_TYPE(this->isValidActuatorID(bID) || bID == BROADCAST_ID);
+}
+
+DXL_BOOL_TYPE DXL::allValidID(const byte bID[], const byte bIDLength)
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		if (!(this->isValidID(bID[i]))) {
+			return DXL_FALSE;
+		}
+	}
+	return DXL_TRUE;
+}
+
+
+inline DXL_BOOL_TYPE DXL::isInit(const byte bID)
+{
+	return DXL_BOOL_TYPE(this->isValidActuatorID(bID) && this->dxl_isActuatorID[bID]);
+}
+
+void DXL::isInit(const byte bID[], const byte bIDLength, byte bIsInit[])
 {
 	byte i;
 	
@@ -23,11 +59,11 @@ void DXL::isInit(const byte bID[], const byte bIDLength, DXL_BOOL bIsInit[])
 }
 
 
-inline DXL_BOOL DXL::checkID(const byte bID)
+inline DXL_BOOL_TYPE DXL::checkID(const byte bID)
 {
 	word wModelNumber;
 	
-	if (this->dxl_beginCalled && bID <= DXL_MAX_ID) {
+	if (this->dxl_beginCalled && this->isValidActuatorID(bID)) {
 		if (this->dxl_isActuatorID[bID]) {
 			if (this->doPing(bID) <= DXL_MAX_ID) {
 				return DXL_TRUE;
@@ -112,18 +148,22 @@ void DXL::getSeriesType(const byte bID[], const byte bIDLength, DXL_SERIES_TYPE 
  *	byte of a word and 0 otherwise.
  *	http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table
  */
-inline byte DXL::isByteAddressValid(const byte bID, const byte bAddress)
+inline DXL_BOOL_TYPE DXL::isByteAddressValid(const byte bID, const byte bAddress)
 {
-	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
-		switch(this->getSeriesType(bID)) {
-			case DXL_AX_SERIES_TYPE:
-				return ((bAddress >= DXL_MULTI_TURN_OFFSET && bAddress <= DXL_RESOLUTION_DIVIDER) || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : (DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
-			case DXL_MX_SERIES_BASIC:
-				return (bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress > DXL_AX_NUM_ADDRESS && bAddress != DXL_GOAL_ACCELERATION)) ? DXL_FALSE : (DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
-			case DXL_MX_SERIES_ADVANCED:
-				return (bAddress == DXL_CCW_COMPLIANCE_SLOPE) ? DXL_FALSE : (DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
-			default:
-				return DXL_FALSE;
+	if (bAddress < DXL_NUM_ADDRESS) {
+		if (this->isValidID(bID)) {
+			switch(this->getSeriesType(bID)) {
+				case DXL_AX_SERIES_TYPE:
+					return ((bAddress >= DXL_MULTI_TURN_OFFSET && bAddress <= DXL_RESOLUTION_DIVIDER) || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
+				case DXL_MX_SERIES_BASIC:
+					return (bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress > DXL_AX_NUM_ADDRESS && bAddress != DXL_GOAL_ACCELERATION)) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
+				case DXL_MX_SERIES_ADVANCED:
+					return (bAddress == DXL_CCW_COMPLIANCE_SLOPE) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
+				default:
+					return DXL_FALSE;
+			}
+		} else if (bID == BROADCAST_ID) {
+			return DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
 		}
 	}
 	return DXL_FALSE;
@@ -134,18 +174,22 @@ inline byte DXL::isByteAddressValid(const byte bID, const byte bAddress)
  *	Returns 1 if an address start location is valid and stores a byte and 0 otherwise.
  *	http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table
  */
-inline byte DXL::isByteAddress(const byte bID, const byte bAddress)
+inline DXL_BOOL_TYPE DXL::isByteAddress(const byte bID, const byte bAddress)
 {
-	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
-		switch(this->getSeriesType(bID)) {
-			case DXL_AX_SERIES_TYPE:
-				return (bAddress == DXL_RESOLUTION_DIVIDER || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : (DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
-			case DXL_MX_SERIES_BASIC:
-				return (bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress > DXL_AX_NUM_ADDRESS && bAddress != DXL_GOAL_ACCELERATION)) ? DXL_FALSE : (DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
-			case DXL_MX_SERIES_ADVANCED:
-				return (bAddress == DXL_CCW_COMPLIANCE_SLOPE) ? DXL_FALSE : (DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
-			default:
-				return DXL_FALSE;
+	if (bAddress < DXL_NUM_ADDRESS) {
+		if (this->isValidActuatorID(bID)) {
+			switch(this->getSeriesType(bID)) {
+				case DXL_AX_SERIES_TYPE:
+					return (bAddress == DXL_RESOLUTION_DIVIDER || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
+				case DXL_MX_SERIES_BASIC:
+					return (bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress > DXL_AX_NUM_ADDRESS && bAddress != DXL_GOAL_ACCELERATION)) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
+				case DXL_MX_SERIES_ADVANCED:
+					return (bAddress == DXL_CCW_COMPLIANCE_SLOPE) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
+				default:
+					return DXL_FALSE;
+			}
+		} else if (bID == BROADCAST_ID) {
+			return DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_BYTE_ADDRESS_TYPE);
 		}
 	}
 	return DXL_FALSE;
@@ -155,27 +199,31 @@ inline byte DXL::isByteAddress(const byte bID, const byte bAddress)
  *	Returns 1 if an address start location is valid and stores a word and 0 otherwise.
  *	http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table
  */
-inline byte DXL::isWordAddress(const byte bID, const byte bAddress)
+inline DXL_BOOL_TYPE DXL::isWordAddress(const byte bID, const byte bAddress)
 {
-	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
-		switch(this->getSeriesType(bID)) {
-			case DXL_AX_SERIES_TYPE:
-				return (bAddress == DXL_MULTI_TURN_OFFSET || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : (DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
-			case DXL_MX_SERIES_BASIC:
-				return (bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : (DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
-			case DXL_MX_SERIES_ADVANCED:
-				return (DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
-			default:
-				return DXL_FALSE;
+	if (bAddress < DXL_NUM_ADDRESS) {
+		if (this->isValidActuatorID(bID)) {
+			switch(this->getSeriesType(bID)) {
+				case DXL_AX_SERIES_TYPE:
+					return (bAddress == DXL_MULTI_TURN_OFFSET || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
+				case DXL_MX_SERIES_BASIC:
+					return (bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
+				case DXL_MX_SERIES_ADVANCED:
+					return DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
+				default:
+					return DXL_FALSE;
+			}
+		} else if (bID == BROADCAST_ID) {
+			return DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] == DXL_WORD_L_ADDRESS_TYPE);
 		}
 	}
 	return DXL_FALSE;
 }
 
 
-inline byte DXL::isValidByte(const byte bData)
+inline DXL_BOOL_TYPE DXL::isValidByte(const byte bData)
 {
-	return (bData != DXL_INVALID_BYTE);
+	return DXL_BOOL_TYPE(bData != DXL_INVALID_BYTE);
 }
 
 inline void DXL::isValidByte(const byte bData[], const byte bDataLength, byte bValidByte[])
@@ -187,7 +235,7 @@ inline void DXL::isValidByte(const byte bData[], const byte bDataLength, byte bV
 	}
 }
 
-inline byte DXL::allValidByte(const byte bData[], const byte bDataLength)
+inline DXL_BOOL_TYPE DXL::allValidByte(const byte bData[], const byte bDataLength)
 {
 	byte i;
 	
@@ -200,9 +248,9 @@ inline byte DXL::allValidByte(const byte bData[], const byte bDataLength)
 }
 
 
-inline byte DXL::isValidWord(const word wData)
+inline DXL_BOOL_TYPE DXL::isValidWord(const word wData)
 {
-	return (wData != DXL_INVALID_WORD);
+	return DXL_BOOL_TYPE(wData != DXL_INVALID_WORD);
 }
 
 inline void DXL::isValidWord(const word wData[], const byte bDataLength, byte bValidWord[])
@@ -214,7 +262,7 @@ inline void DXL::isValidWord(const word wData[], const byte bDataLength, byte bV
 	}
 }
 
-inline byte DXL::allValidWord(const word wData[], const byte bDataLength)
+inline DXL_BOOL_TYPE DXL::allValidWord(const word wData[], const byte bDataLength)
 {
 	byte i;
 	
@@ -227,18 +275,22 @@ inline byte DXL::allValidWord(const word wData[], const byte bDataLength)
 }
 
 
-inline byte DXL::isAddressWritable(const byte bID, const byte bAddress)
+inline DXL_BOOL_TYPE DXL::isAddressWritable(const byte bID, const byte bAddress)
 {
-	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
-		switch(this->getSeriesType(bID)) {
-			case DXL_AX_SERIES_TYPE:
-				return (bAddress < DXL_ID || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK) || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : (DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
-			case DXL_MX_SERIES_BASIC:
-				return (bAddress < DXL_ID || bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK) || (bAddress > DXL_AX_NUM_ADDRESS && bAddress != DXL_GOAL_ACCELERATION)) ? DXL_FALSE : (DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
-			case DXL_MX_SERIES_ADVANCED:
-				return (bAddress < DXL_ID || bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK)) ? DXL_FALSE : (DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
-			default:
-				return DXL_FALSE;
+	if (bAddress < DXL_NUM_ADDRESS) {
+		if (this->isValidActuatorID(bID)) {
+			switch(this->getSeriesType(bID)) {
+				case DXL_AX_SERIES_TYPE:
+					return (bAddress < DXL_ID || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK) || bAddress > DXL_AX_NUM_ADDRESS) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
+				case DXL_MX_SERIES_BASIC:
+					return (bAddress < DXL_ID || bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK) || (bAddress > DXL_AX_NUM_ADDRESS && bAddress != DXL_GOAL_ACCELERATION)) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
+				case DXL_MX_SERIES_ADVANCED:
+					return (bAddress < DXL_ID || bAddress == DXL_CCW_COMPLIANCE_SLOPE || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK)) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
+				default:
+					return DXL_FALSE;
+			}
+		} else if (bID == BROADCAST_ID) {
+			return (bAddress < DXL_ID || (bAddress >= DXL_PRESENT_POSITION && bAddress < DXL_LOCK)) ? DXL_FALSE : DXL_BOOL_TYPE(DXL_ADDRESS[bAddress] != DXL_UNDEFINED_ADDRESS_TYPE);
 		}
 	}
 	return DXL_FALSE;

@@ -2,7 +2,7 @@
  *	DXL.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-30-15
+ *	Created: 8-13-14, modified: 5-1-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -98,7 +98,7 @@ public:
 	
 	// DXL_ID
 	inline byte isID(byte bID);
-	void isID(const byte bID[], byte bIDLength, byte bBoolean[]);
+	void isID(const byte bID[], byte bIDLength, byte bIsID[]);
 	
 	// DXL_BAUD_RATE
 	inline word getMaxBaud(byte bID);
@@ -195,7 +195,7 @@ public:
 	byte isMode(byte bID, byte bMode);
 	void isMode(const byte bID[], byte bIDLength, const byte bMode[], byte bIsMode[]);
 	
-	// DXL_MOVING_SPEED
+	// DXL_MOVING_SPEED, DXL_TORQUE_LIMIT
 	inline byte stop(void);
 	inline byte stop(byte bID);
 	inline byte stop(const byte bID[], byte bIDLength);
@@ -573,15 +573,21 @@ private:
 	byte getByteData(byte bID);
 	word getWordData(byte bID);
 	
-	byte setData(byte bID, DXL_INSTRUCTION bInstruction, byte bParamLen);
+	DXL_RETURN_TYPE setData(byte bID, DXL_INSTRUCTION bInstruction, byte bParamLen);
 	
 	
 	// DXL_Validate
 	
-	inline DXL_BOOL isInit(byte bID);
-	void isInit(const byte bID[], byte bIDLength, DXL_BOOL bIsInit[]);
+	inline DXL_BOOL_TYPE isValidActuatorID(byte bID);
+	DXL_BOOL_TYPE allValidActuatorID(const byte bID[], byte bIDLength);
 	
-	inline DXL_BOOL checkID(byte bID);
+	inline DXL_BOOL_TYPE isValidID(byte bID);
+	DXL_BOOL_TYPE allValidID(const byte bID[], byte bIDLength);
+	
+	inline DXL_BOOL_TYPE isInit(byte bID);
+	void isInit(const byte bID[], byte bIDLength, byte bIsInit[]);
+	
+	inline DXL_BOOL_TYPE checkID(byte bID);
 	
 	inline DXL_SERIES getSeries(byte bID);
 	void getSeries(const byte bID[], byte bIDLength, DXL_SERIES bSeries[]);
@@ -589,20 +595,20 @@ private:
 	inline DXL_SERIES_TYPE getSeriesType(byte bID);
 	void getSeriesType(const byte bID[], byte bIDLength, DXL_SERIES_TYPE bSeries[]);
 	
-	inline byte isByteAddressValid(byte bID, byte bAddress);
+	inline DXL_BOOL_TYPE isByteAddressValid(byte bID, byte bAddress);
 	
-	inline byte isByteAddress(byte bID, byte bAddress);
-	inline byte isWordAddress(byte bID, byte bAddress);
+	inline DXL_BOOL_TYPE isByteAddress(byte bID, byte bAddress);
+	inline DXL_BOOL_TYPE isWordAddress(byte bID, byte bAddress);
 	
-	inline byte isValidByte(byte bData);
+	inline DXL_BOOL_TYPE isValidByte(byte bData);
 	inline void isValidByte(const byte bData[], byte bDataLength, byte bValidByte[]);
-	inline byte allValidByte(const byte bData[], byte bDataLength);
+	inline DXL_BOOL_TYPE allValidByte(const byte bData[], byte bDataLength);
 	
-	inline byte isValidWord(word wData);
+	inline DXL_BOOL_TYPE isValidWord(word wData);
 	inline void isValidWord(const word wData[], byte bDataLength, byte bValidWord[]);
-	inline byte allValidWord(const word wData[], byte bDataLength);
+	inline DXL_BOOL_TYPE allValidWord(const word wData[], byte bDataLength);
 	
-	inline byte isAddressWritable(byte bID, byte bAddress);
+	inline DXL_BOOL_TYPE isAddressWritable(byte bID, byte bAddress);
 	inline void isAddressWritable(byte bID, const byte bAddress[], byte bNumAddress, byte bWritable[]);
 };
 

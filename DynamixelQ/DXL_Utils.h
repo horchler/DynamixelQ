@@ -2,7 +2,7 @@
  *	DXL_Utils.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 4-30-15
+ *	Created: 2-23-15, modified: 5-1-15
  */
  
 #ifndef DXL_UTILS_H_
@@ -50,7 +50,7 @@ inline byte DXL::doPing(const byte bID)
 	int retryCount = 0;
 	byte bStatus;
 	
-	if (bID <= DXL_MAX_ID) {
+	if (this->isValidActuatorID(bID)) {
 		bStatus = this->txRxPacket(bID, INST_PING, 0);
 		while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
 			this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
@@ -77,7 +77,7 @@ byte DXL::getByteData(const byte bID)
 	int retryCount = 0;
 	byte bStatus;
 	
-	if (bID <= DXL_MAX_ID) {
+	if (this->isValidActuatorID(bID)) {
 		bStatus = this->txRxPacket(bID, INST_READ, 2);
 		while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
 			this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
@@ -94,7 +94,7 @@ word DXL::getWordData(const byte bID)
 	int retryCount = 0;
 	byte bStatus;
 	
-	if (bID <= DXL_MAX_ID) {
+	if (this->isValidActuatorID(bID)) {
 		bStatus = this->txRxPacket(bID, INST_READ, 2);
 		while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
 			this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
@@ -107,7 +107,7 @@ word DXL::getWordData(const byte bID)
 }
 
 
-byte DXL::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byte bParamLen)
+DXL_RETURN_TYPE DXL::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byte bParamLen)
 {
 	int retryCount = 0;
 	byte bStatus;
@@ -118,7 +118,7 @@ byte DXL::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byte
 		bStatus = this->txRxPacket(bID, bInstruction, bParamLen);
 		retryCount++;
 	}
-	return bStatus;
+	return (bStatus == 1) ? DXL_SUCCESS : DXL_FAILURE;
 }
 
 
@@ -127,7 +127,7 @@ byte DXL::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byte
  */
 byte DXL::getByte(const byte bID, const byte bAddress)
 {
-	if (bID <= DXL_MAX_ID && (this->isByteAddress(bID, bAddress))) {
+	if (this->isValidActuatorID(bID) && this->isByteAddress(bID, bAddress)) {
 		this->mParamBuffer[0] = bAddress;
 		this->mParamBuffer[1] = DXL_BYTE_LENGTH;
 		return this->getByteData(bID);
@@ -146,7 +146,7 @@ void DXL::getByte(const byte bID[], const byte bIDLength, const byte bAddress, b
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
 	for (i = 0; i < bIDLength; i++) {
-		bData[i] = (bID[i] <= DXL_MAX_ID && (this->isByteAddress(bID[i], bAddress))) ? this->getByteData(bID[i]) : DXL_INVALID_BYTE;
+		bData[i] = (this->isValidActuatorID(bID[i]) && this->isByteAddress(bID[i], bAddress)) ? this->getByteData(bID[i]) : DXL_INVALID_BYTE;
 	}
 }
 
@@ -178,7 +178,7 @@ byte DXL::setByte(const byte bAddress, const byte bData)
  */
 byte DXL::setByte(const byte bID, const byte bAddress, const byte bData)
 {
-	if (this->isByteAddress(bID, bAddress)) {
+	if (this->isValidID(bID) && this->isByteAddress(bID, bAddress)) {
 		this->mParamBuffer[0] = bAddress;
 		this->mParamBuffer[1] = bData;
 		return this->setData(bID, INST_WRITE, 2);
@@ -197,10 +197,14 @@ byte DXL::setByte(const byte bID[], const byte bIDLength, const byte bAddress, c
 {
 	byte i, buff_idx = 1, lobyte;
 	
-	for (i = 0; i < bIDLength; i++) {
-		if ((bIDLength > 1 && bID[i] > DXL_MAX_ID) || !(this->isByteAddress(bID[i], bAddress))) {
-			return DXL_FAILURE;
+	if (bIDLength > 1) {
+		for (i = 0; i < bIDLength; i++) {
+			if (!(this->isValidID(bID[i])) || !(this->isByteAddress(bID[i], bAddress))) {
+				return DXL_FAILURE;
+			}
 		}
+	} else {
+		return (bIDLength == 1) ? this->setByte(bID[0], bAddress, bData) : DXL_FAILURE;
 	}
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
@@ -223,10 +227,14 @@ byte DXL::setByte(const byte bID[], const byte bIDLength, const byte bAddress, c
 {
 	byte i, buff_idx = 1;
 	
-	for (i = 0; i < bIDLength; i++) {
-		if ((bIDLength > 1 && bID[i] > DXL_MAX_ID) || !(this->isByteAddress(bID[i], bAddress))) {
-			return DXL_FAILURE;
+	if (bIDLength > 1) {
+		for (i = 0; i < bIDLength; i++) {
+			if (!(this->isValidID(bID[i])) || !(this->isByteAddress(bID[i], bAddress))) {
+				return DXL_FAILURE;
+			}
 		}
+	} else {
+		return (bIDLength == 1) ? this->setByte(bID[0], bAddress, bData[0]) : DXL_FAILURE;
 	}
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
@@ -243,7 +251,7 @@ byte DXL::setByte(const byte bID[], const byte bIDLength, const byte bAddress, c
  */
 word DXL::getWord(const byte bID, const byte bAddress)
 {
-	if (bID <= DXL_MAX_ID && (this->isWordAddress(bID, bAddress))) {
+	if (this->isValidActuatorID(bID) && this->isWordAddress(bID, bAddress)) {
 		this->mParamBuffer[0] = bAddress;
 		this->mParamBuffer[1] = DXL_WORD_LENGTH;
 		return this->getWordData(bID);
@@ -262,7 +270,7 @@ void DXL::getWord(const byte bID[], const byte bIDLength, const byte bAddress, w
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_WORD_LENGTH;
 	for (i = 0; i < bIDLength; i++) {
-		wData[i] = (bID[i] <= DXL_MAX_ID && (this->isWordAddress(bID[i], bAddress))) ? this->getWordData(bID[i]) : DXL_INVALID_WORD;
+		wData[i] = (this->isValidActuatorID(bID[i]) && this->isWordAddress(bID[i], bAddress)) ? this->getWordData(bID[i]) : DXL_INVALID_WORD;
 	}
 }
 
@@ -294,7 +302,7 @@ byte DXL::setWord(const byte bAddress, const word wData)
  */
 byte DXL::setWord(const byte bID, const byte bAddress, const word wData)
 {
-	if (this->isWordAddress(bID, bAddress)) {
+	if (this->isValidID(bID) && this->isWordAddress(bID, bAddress)) {
 		this->mParamBuffer[0] = bAddress;
 		this->mParamBuffer[1] = DXL_LOBYTE(wData);
 		this->mParamBuffer[2] = DXL_HIBYTE(wData);
@@ -314,10 +322,14 @@ byte DXL::setWord(const byte bID[], const byte bIDLength, const byte bAddress, c
 {
 	byte i, buff_idx = 1, lobyte, hibyte;
 	
-	for (i = 0; i < bIDLength; i++) {
-		if ((bIDLength > 1 && bID[i] > DXL_MAX_ID) || !(this->isWordAddress(bID[i], bAddress))) {
-			return DXL_FAILURE;
+	if (bIDLength > 1) {
+		for (i = 0; i < bIDLength; i++) {
+			if (!(this->isValidID(bID[i])) || !(this->isWordAddress(bID[i], bAddress))) {
+				return DXL_FAILURE;
+			}
 		}
+	} else {
+		return (bIDLength == 1) ? this->setWord(bID[0], bAddress, wData) : DXL_FAILURE;
 	}
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_WORD_LENGTH;
@@ -342,10 +354,14 @@ byte DXL::setWord(const byte bID[], const byte bIDLength, const byte bAddress, c
 {
 	byte i, buff_idx = 1;
 	
-	for (i = 0; i < bIDLength; i++) {
-		if ((bIDLength > 1 && bID[i] > DXL_MAX_ID) || !(this->isWordAddress(bID[i], bAddress))) {
-			return DXL_FAILURE;
+	if (bIDLength > 1) {
+		for (i = 0; i < bIDLength; i++) {
+			if (!(this->isValidID(bID[i])) || !(this->isWordAddress(bID[i], bAddress))) {
+				return DXL_FAILURE;
+			}
 		}
+	} else {
+		return (bIDLength == 1) ? this->setWord(bID[0], bAddress, wData[0]) : DXL_FAILURE;
 	}
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_WORD_LENGTH;
@@ -364,13 +380,13 @@ inline byte DXL::isID(const byte bID)
 	return bID == this->getByte(bID, DXL_ID);
 }
 
-void DXL::isID(const byte bID[], const byte bIDLength, byte bBoolean[])
+void DXL::isID(const byte bID[], const byte bIDLength, byte bIsID[])
 {
 	byte i;
 	
-	this->getByte(bID, bIDLength, DXL_ID, bBoolean);
+	this->getByte(bID, bIDLength, DXL_ID, bIsID);
 	for (i = 0; i < bIDLength; i++) {
-		bBoolean[i] = (bID[i] == bBoolean[i]);
+		bIsID[i] = (bID[i] == bIsID[i]);
 	}
 }
 
@@ -396,18 +412,26 @@ byte DXL::toggleLED(const byte bID)
 {
 	byte bLEDstate;
 	
-	bLEDstate = !(this->getByte(bID, DXL_LED));
-	this->setByte(DXL_LED, bLEDstate);
+	bLEDstate = this->getByte(bID, DXL_LED);
+	if (bLEDstate != DXL_INVALID_BYTE) {
+		bLEDstate = !bLEDstate;
+		this->setByte(DXL_LED, bLEDstate);
+	}
 	return bLEDstate;
 }
 
-void DXL::toggleLED(const byte bID[], const byte bIDLength)
+void DXL::toggleLED(const byte bID[], byte bIDLength)
 {
-	byte i, bLEDstate[bIDLength];
+	byte i, bLEDstate[bIDLength], bOffset = 0;
 	
 	this->getByte(bID, bIDLength, DXL_LED, bLEDstate);
 	for (i = 0; i < bIDLength; i++) {
-		bLEDstate[i] = !bLEDstate[i];
+		if (bLEDstate[i] == DXL_INVALID_BYTE) {
+		    bOffset++;
+			bIDLength--;
+		} else {
+			bLEDstate[i-bOffset] = !bLEDstate[i];
+		}
 	}
 	this->setByte(bID, bIDLength, DXL_LED, bLEDstate);
 }
@@ -550,7 +574,7 @@ byte DXL::allRegistered(const byte bID[], const byte bIDLength)
 	
 	this->getByte(bID, bIDLength, DXL_REGISTERED, bRegistered);
 	for (i = 0; i < bIDLength; i++) {
-		if (bRegistered[i] == DXL_FALSE) {
+		if (bRegistered[i] != DXL_TRUE) {
 			return DXL_FALSE;
 		}
 	}
@@ -589,7 +613,7 @@ byte DXL::allMoving(const byte bID[], const byte bIDLength)
 	
 	this->getByte(bID, bIDLength, DXL_MOVING, bMoving);
 	for (i = 0; i < bIDLength; i++) {
-		if (bMoving[i] == DXL_FALSE) {
+		if (bMoving[i] != DXL_TRUE) {
 			return DXL_FALSE;
 		}
 	}
@@ -625,7 +649,7 @@ byte DXL::setJointMode(const byte bID)
 	wJointModeLimits[1] = this->getPositionResolution(bID);
 	
 	bStatus = this->syncWrite(bID, DXL_CW_ANGLE_LIMIT, wJointModeLimits, bNumDataPerID);
-	return bStatus & this->writeWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+	return bStatus & this->setWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 // TODO: Handle broadcast ID.
 byte DXL::setJointMode(const byte bID[], const byte bIDLength)
@@ -636,9 +660,9 @@ byte DXL::setJointMode(const byte bID[], const byte bIDLength)
 	
 	this->getPositionResolution(bID, bIDLength, wCCWAngleLimit);
 	
-	bStatus = this->writeWord(bID, bIDLength, DXL_CW_ANGLE_LIMIT, wCWAngleLimit);
-	bStatus &= this->writeWord(bID, bIDLength, DXL_CCW_ANGLE_LIMIT, wCCWAngleLimit);
-	return bStatus & this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+	bStatus = this->setWord(bID, bIDLength, DXL_CW_ANGLE_LIMIT, wCWAngleLimit);
+	bStatus &= this->setWord(bID, bIDLength, DXL_CCW_ANGLE_LIMIT, wCCWAngleLimit);
+	return bStatus & this->setWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 
 inline byte DXL::isJointMode(const byte bID)
@@ -668,17 +692,22 @@ byte DXL::setWheelMode(const byte bID)
 	const word  wWheelModeLimits[2] = {0, 0};
 	
 	bStatus = this->syncWrite(bID, DXL_CW_ANGLE_LIMIT, wWheelModeLimits, bNumDataPerID);
-	return bStatus & this->writeWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+	return bStatus & this->setWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
-// TODO: Handle broadcast ID.
+
 byte DXL::setWheelMode(const byte bID[], const byte bIDLength)
 {
 	byte bStatus;
 	const byte bNumDataPerID = 2;
 	const word wWheelModeLimits[2] = {0, 0};
 	
+	if (bIDLength > 1 && !(this->allValidID(bID, bIDLength))) {
+		return DXL_FAILURE;
+	} else {
+		return (bIDLength == 1) ? this->setWheelMode(bID[0]) : DXL_FAILURE;
+	}
 	bStatus = this->syncWrite(bID, bIDLength, DXL_CW_ANGLE_LIMIT, wWheelModeLimits, bNumDataPerID, bNumDataPerID);
-	return bStatus & this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+	return bStatus & this->setWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 
 inline byte DXL::isWheelMode(const byte bID)
@@ -700,7 +729,7 @@ inline byte DXL::setMultiTurnMode(void)
 {
 	return this->setMultiTurnMode(BROADCAST_ID);
 }
-// TODO: Handle broadcast ID.
+
 byte DXL::setMultiTurnMode(const byte bID)
 {
 	byte bStatus;
@@ -709,8 +738,8 @@ byte DXL::setMultiTurnMode(const byte bID)
 	
 	if (this->getSeries(bID) == DXL_MX_SERIES) {
 		bStatus = this->syncWrite(bID, DXL_CW_ANGLE_LIMIT, wMultiTurnModeLimits, bNumDataPerID);
-		bStatus &= this->writeWord(bID, DXL_MULTI_TURN_OFFSET, wMultiTurnOffset);
-		return bStatus & this->writeWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+		bStatus &= this->setWord(bID, DXL_MULTI_TURN_OFFSET, wMultiTurnOffset);
+		return bStatus & this->setWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 	}
 	return DXL_FAILURE;
 }
@@ -720,15 +749,23 @@ byte DXL::setMultiTurnMode(const byte bID[], const byte bIDLength)
 	byte i, bStatus;
 	const word wMultiTurnOffset = 0;
 	
-	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeries(bID[i]) != DXL_MX_SERIES) {
+	if (bIDLength > 1) {
+		if (!(this->allValidID(bID, bIDLength))) {
 			return DXL_FAILURE;
+		} else {
+			for (i = 0; i < bIDLength; i++) {
+				if (this->getSeries(bID[i]) != DXL_MX_SERIES) {
+					return DXL_FAILURE;
+				}
+			}
 		}
+	} else {
+		return (bIDLength == 1) ? this->setMultiTurnMode(bID[0]) : DXL_FAILURE;
 	}
-	bStatus = this->writeWord(bID, bIDLength, DXL_CW_ANGLE_LIMIT, DXL_MX_POSITION_RESOLUTION);
-	bStatus &= this->writeWord(bID, bIDLength, DXL_CCW_ANGLE_LIMIT, DXL_MX_POSITION_RESOLUTION);
-	bStatus &= this->writeWord(bID, bIDLength, DXL_MULTI_TURN_OFFSET, wMultiTurnOffset);
-	return bStatus & this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+	bStatus = this->setWord(bID, bIDLength, DXL_CW_ANGLE_LIMIT, DXL_MX_POSITION_RESOLUTION);
+	bStatus &= this->setWord(bID, bIDLength, DXL_CCW_ANGLE_LIMIT, DXL_MX_POSITION_RESOLUTION);
+	bStatus &= this->setWord(bID, bIDLength, DXL_MULTI_TURN_OFFSET, wMultiTurnOffset);
+	return bStatus & this->setWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 
 inline byte DXL::isMultiTurnMode(const byte bID)
@@ -750,7 +787,7 @@ inline byte DXL::setTorqueControlMode(void)
 {
 	return this->setTorqueControlMode(BROADCAST_ID);
 }
-// TODO: Handle broadcast ID.
+
 byte DXL::setTorqueControlMode(const byte bID)
 {
 	byte bStatus;
@@ -759,8 +796,8 @@ byte DXL::setTorqueControlMode(const byte bID)
 	
 	if (this->getSeriesType(bID) == DXL_MX_SERIES_ADVANCED) {
 		bStatus = this->syncWrite(bID, DXL_CW_ANGLE_LIMIT, wWheelModeLimits, bNumDataPerID);
-		bStatus &= this->writeWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
-		return bStatus & this->writeByte(bID, DXL_TORQUE_CONTROL_MODE_ENABLE, DXL_TRUE);
+		bStatus &= this->setWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+		return bStatus & this->setWord(bID, DXL_TORQUE_CONTROL_MODE_ENABLE, DXL_TRUE);
 	}
 	return DXL_FAILURE;
 }
@@ -771,14 +808,22 @@ byte DXL::setTorqueControlMode(const byte bID[], const byte bIDLength)
 	const byte bNumDataPerID = 2;
 	const word wWheelModeLimits[2] = {0, 0};
 	
-	for (i = 0; i < bIDLength; i++) {
-		if (bID[i] > DXL_MAX_ID || this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+	if (bIDLength > 1) {
+		if (!(this->allValidID(bID, bIDLength))) {
 			return DXL_FAILURE;
+		} else {
+			for (i = 0; i < bIDLength; i++) {
+				if (this->getSeriesType(bID[i]) != DXL_MX_SERIES_ADVANCED) {
+					return DXL_FAILURE;
+				}
+			}
 		}
+	} else {
+		return (bIDLength == 1) ? this->setTorqueControlMode(bID[0]) : DXL_FAILURE;
 	}
 	bStatus = this->syncWrite(bID, bIDLength, DXL_CW_ANGLE_LIMIT, wWheelModeLimits, bNumDataPerID, bNumDataPerID);
-	bStatus &= this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
-	return bStatus & this->writeByte(bID, bIDLength, DXL_TORQUE_CONTROL_MODE_ENABLE, DXL_TRUE);
+	bStatus &= this->setWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
+	return bStatus & this->setWord(bID, bIDLength, DXL_TORQUE_CONTROL_MODE_ENABLE, DXL_TRUE);
 }
 
 inline byte DXL::isTorqueControlMode(const byte bID)
@@ -801,7 +846,7 @@ inline byte DXL::getMode(const byte bID)
 	byte bTorqueControlMode;
 	word wCWAngleLimit, wCCWAngleLimit;
 	
-	if (bID <= DXL_MAX_ID) {
+	if (this->isValidActuatorID(bID)) {
 		bTorqueControlMode = this->getByte(bID, DXL_TORQUE_CONTROL_MODE_ENABLE);
 		if (bTorqueControlMode == DXL_TRUE) {
 			return DXL_TORQUE_CONTROL_MODE;
