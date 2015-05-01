@@ -2,7 +2,7 @@
  *	DXL_Utils.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 4-22-15
+ *	Created: 2-23-15, modified: 4-30-15
  */
  
 #ifndef DXL_UTILS_H_
@@ -15,18 +15,18 @@
 static int DXL_UTILS_RETRY_COUNT = 0;
 
 
-inline int DXLQ::getRetryCount(void)
+inline int DXL::getRetryCount(void)
 {
 	return DXL_UTILS_RETRY_COUNT;
 }
 
-inline void DXLQ::setRetryCount(int retryCount)
+inline void DXL::setRetryCount(int retryCount)
 {
 	DXL_UTILS_RETRY_COUNT = retryCount;
 }
 
 
-inline void DXLQ::fillByteArray(byte bArray[], const byte bArrayLength, const byte bValue)
+inline void DXL::fillByteArray(byte bArray[], const byte bArrayLength, const byte bValue)
 {
 	byte i;
 	
@@ -35,7 +35,7 @@ inline void DXLQ::fillByteArray(byte bArray[], const byte bArrayLength, const by
 	} 
 }
 
-inline void DXLQ::fillWordArray(word wArray[], const byte bArrayLength, const word wValue)
+inline void DXL::fillWordArray(word wArray[], const byte bArrayLength, const word wValue)
 {
 	byte i;
 	
@@ -45,7 +45,7 @@ inline void DXLQ::fillWordArray(word wArray[], const byte bArrayLength, const wo
 }
 
 
-inline byte DXLQ::doPing(const byte bID)
+inline byte DXL::doPing(const byte bID)
 {
 	int retryCount = 0;
 	byte bStatus;
@@ -62,7 +62,7 @@ inline byte DXLQ::doPing(const byte bID)
 	return DXL_INVALID_BYTE;
 }
 
-void DXLQ::doPing(const byte bID[], const byte bIDLength, byte bPingID[])
+void DXL::doPing(const byte bID[], const byte bIDLength, byte bPingID[])
 {
 	byte i;
 	
@@ -72,7 +72,7 @@ void DXLQ::doPing(const byte bID[], const byte bIDLength, byte bPingID[])
 }
 
 
-byte DXLQ::getByteData(const byte bID)
+byte DXL::getByteData(const byte bID)
 {
 	int retryCount = 0;
 	byte bStatus;
@@ -89,7 +89,7 @@ byte DXLQ::getByteData(const byte bID)
 	return DXL_INVALID_BYTE;
 }
 
-word DXLQ::getWordData(const byte bID)
+word DXL::getWordData(const byte bID)
 {
 	int retryCount = 0;
 	byte bStatus;
@@ -107,7 +107,7 @@ word DXLQ::getWordData(const byte bID)
 }
 
 
-byte DXLQ::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byte bParamLen)
+byte DXL::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byte bParamLen)
 {
 	int retryCount = 0;
 	byte bStatus;
@@ -125,7 +125,7 @@ byte DXLQ::setData(const byte bID, const DXL_INSTRUCTION bInstruction, const byt
 /*
  *	For the single bID, the byte value parameter stored at bAddress is returned.
  */
-byte DXLQ::getByte(const byte bID, const byte bAddress)
+byte DXL::getByte(const byte bID, const byte bAddress)
 {
 	if (bID <= DXL_MAX_ID && (this->isByteAddress(bID, bAddress))) {
 		this->mParamBuffer[0] = bAddress;
@@ -139,7 +139,7 @@ byte DXLQ::getByte(const byte bID, const byte bAddress)
  *	For each of the bIDLength IDs in bID, the byte value parameter stored at bAddress is
  *	returned in bData.
  */
-void DXLQ::getByte(const byte bID[], const byte bIDLength, const byte bAddress, byte bData[])
+void DXL::getByte(const byte bID[], const byte bIDLength, const byte bAddress, byte bData[])
 {
 	byte i;
 	
@@ -154,7 +154,7 @@ void DXLQ::getByte(const byte bID[], const byte bIDLength, const byte bAddress, 
  *	For each of the bIDLength IDs in bID, the byte value parameter stored in the 
  *	corresponding bIDLength elements of the bAddress array is returned in bData.
  */
-void DXLQ::getByte(const byte bID[], const byte bIDLength, const byte bAddress[], byte bData[])
+void DXL::getByte(const byte bID[], const byte bIDLength, const byte bAddress[], byte bData[])
 {
 	byte i;
 	
@@ -167,7 +167,7 @@ void DXLQ::getByte(const byte bID[], const byte bIDLength, const byte bAddress[]
 /*
  *	Write the byte value parameter in bData to the address bAddress of all actuators.
  */
-byte DXLQ::setByte(const byte bAddress, const byte bData)
+byte DXL::setByte(const byte bAddress, const byte bData)
 {
 	return this->setByte(BROADCAST_ID, bAddress, bData);
 }
@@ -176,7 +176,7 @@ byte DXLQ::setByte(const byte bAddress, const byte bData)
  *	For the single ID, bID, write the byte value parameter in bData to the address
  *	bAddress. 
  */
-byte DXLQ::setByte(const byte bID, const byte bAddress, const byte bData)
+byte DXL::setByte(const byte bID, const byte bAddress, const byte bData)
 {
 	if (this->isByteAddress(bID, bAddress)) {
 		this->mParamBuffer[0] = bAddress;
@@ -193,7 +193,7 @@ byte DXLQ::setByte(const byte bID, const byte bAddress, const byte bData)
  *	maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::setByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData)
+byte DXL::setByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData)
 {
 	byte i, buff_idx = 1, lobyte;
 	
@@ -219,7 +219,7 @@ byte DXLQ::setByte(const byte bID[], const byte bIDLength, const byte bAddress, 
  *	so as not to exceed the maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::setByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData[])
+byte DXL::setByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData[])
 {
 	byte i, buff_idx = 1;
 	
@@ -241,7 +241,7 @@ byte DXLQ::setByte(const byte bID[], const byte bIDLength, const byte bAddress, 
 /*
  *	For the single bID, the word value parameter stored at bAddress is returned.
  */
-word DXLQ::getWord(const byte bID, const byte bAddress)
+word DXL::getWord(const byte bID, const byte bAddress)
 {
 	if (bID <= DXL_MAX_ID && (this->isWordAddress(bID, bAddress))) {
 		this->mParamBuffer[0] = bAddress;
@@ -255,7 +255,7 @@ word DXLQ::getWord(const byte bID, const byte bAddress)
  *	For each of the bIDLength IDs in bID, the word value parameter stored at bAddress is
  *	returned in wData.
  */
-void DXLQ::getWord(const byte bID[], const byte bIDLength, const byte bAddress, word wData[])
+void DXL::getWord(const byte bID[], const byte bIDLength, const byte bAddress, word wData[])
 {
 	byte i;
 	
@@ -270,7 +270,7 @@ void DXLQ::getWord(const byte bID[], const byte bIDLength, const byte bAddress, 
  *	For each of the bIDLength IDs in bID, the word value parameter stored in the 
  *	corresponding bIDLength elements of the bAddress array is returned in wData.
  */
-void DXLQ::getWord(const byte bID[], const byte bIDLength, const byte bAddress[], word wData[])
+void DXL::getWord(const byte bID[], const byte bIDLength, const byte bAddress[], word wData[])
 {
 	byte i;
 	
@@ -283,7 +283,7 @@ void DXLQ::getWord(const byte bID[], const byte bIDLength, const byte bAddress[]
 /*
  *	Write the word value parameter in wData to the address bAddress of all actuators.
  */
-byte DXLQ::setWord(const byte bAddress, const word wData)
+byte DXL::setWord(const byte bAddress, const word wData)
 {
 	return this->setWord(BROADCAST_ID, bAddress, wData);
 }
@@ -292,7 +292,7 @@ byte DXLQ::setWord(const byte bAddress, const word wData)
  *	For the single ID, bID, write the word value parameter in wData to the address
  *	bAddress. 
  */
-byte DXLQ::setWord(const byte bID, const byte bAddress, const word wData)
+byte DXL::setWord(const byte bID, const byte bAddress, const word wData)
 {
 	if (this->isWordAddress(bID, bAddress)) {
 		this->mParamBuffer[0] = bAddress;
@@ -310,7 +310,7 @@ byte DXLQ::setWord(const byte bID, const byte bAddress, const word wData)
  *	maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::setWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData)
+byte DXL::setWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData)
 {
 	byte i, buff_idx = 1, lobyte, hibyte;
 	
@@ -338,7 +338,7 @@ byte DXLQ::setWord(const byte bID[], const byte bIDLength, const byte bAddress, 
  *	so as not to exceed the maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::setWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData[])
+byte DXL::setWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData[])
 {
 	byte i, buff_idx = 1;
 	
@@ -359,12 +359,12 @@ byte DXLQ::setWord(const byte bID[], const byte bIDLength, const byte bAddress, 
 
 
 // DXL_ID
-inline byte DXLQ::isID(const byte bID)
+inline byte DXL::isID(const byte bID)
 {
 	return bID == this->getByte(bID, DXL_ID);
 }
 
-void DXLQ::isID(const byte bID[], const byte bIDLength, byte bBoolean[])
+void DXL::isID(const byte bID[], const byte bIDLength, byte bBoolean[])
 {
 	byte i;
 	
@@ -376,12 +376,12 @@ void DXLQ::isID(const byte bID[], const byte bIDLength, byte bBoolean[])
 
 
 // DXL_BAUD_RATE
-inline word DXLQ::getMaxBaud(const byte bID)
+inline word DXL::getMaxBaud(const byte bID)
 {
 	return (this->getSeries(bID) == DXL_MX_SERIES) ? DXL_MX_MAX_BAUD : DXL_AX_MAX_BAUD;
 }
 
-void DXLQ::getMaxBaud(const byte bID[], const byte bIDLength, byte bMaxBaud[])
+void DXL::getMaxBaud(const byte bID[], const byte bIDLength, byte bMaxBaud[])
 {
 	byte i;
 	
@@ -392,7 +392,7 @@ void DXLQ::getMaxBaud(const byte bID[], const byte bIDLength, byte bMaxBaud[])
 
 
 // DXL_LED
-byte DXLQ::toggleLED(const byte bID)
+byte DXL::toggleLED(const byte bID)
 {
 	byte bLEDstate;
 	
@@ -401,7 +401,7 @@ byte DXLQ::toggleLED(const byte bID)
 	return bLEDstate;
 }
 
-void DXLQ::toggleLED(const byte bID[], const byte bIDLength)
+void DXL::toggleLED(const byte bID[], const byte bIDLength)
 {
 	byte i, bLEDstate[bIDLength];
 	
@@ -414,12 +414,12 @@ void DXLQ::toggleLED(const byte bID[], const byte bIDLength)
 
 
 // DXL_GOAL_POSITION, DXL_PRESENT_POSITION
-inline word DXLQ::getPositionResolution(const byte bID)
+inline word DXL::getPositionResolution(const byte bID)
 {
 	return (this->getSeries(bID) == DXL_MX_SERIES) ? DXL_MX_POSITION_RESOLUTION : DXL_AX_POSITION_RESOLUTION;
 }
 
-void DXLQ::getPositionResolution(const byte bID[], const byte bIDLength, word wPositionResolution[])
+void DXL::getPositionResolution(const byte bID[], const byte bIDLength, word wPositionResolution[])
 {
 	byte i;
 	
@@ -429,29 +429,29 @@ void DXLQ::getPositionResolution(const byte bID[], const byte bIDLength, word wP
 }
 
 
-inline word DXLQ::getPosition(const byte bID)
+inline word DXL::getPosition(const byte bID)
 {
 	return this->getWord(bID, DXL_PRESENT_POSITION);
 }
 
-inline void DXLQ::getPosition(const byte bID[], const byte bIDLength, word wPosition[])
+inline void DXL::getPosition(const byte bID[], const byte bIDLength, word wPosition[])
 {
 	this->getWord(bID, bIDLength, DXL_PRESENT_POSITION, wPosition);
 }
 
 
 // TODO: Handle BROADCAST_ID case for mixed actuator types
-inline byte DXLQ::setPosition(const word wPosition)
+inline byte DXL::setPosition(const word wPosition)
 {
 	return this->setWord(DXL_GOAL_POSITION, wPosition);
 }
 // TODO: Handle BROADCAST_ID case for mixed actuator types
-inline byte DXLQ::setPosition(const byte bID, const word wPosition)
+inline byte DXL::setPosition(const byte bID, const word wPosition)
 {
 	return this->setWord(bID, DXL_GOAL_POSITION, wPosition);
 }
 
-inline byte DXLQ::setPosition(const byte bID[], const byte bIDLength, const word wPosition)
+inline byte DXL::setPosition(const byte bID[], const byte bIDLength, const word wPosition)
 {
 	//byte i;
 	//word wData[bIDLength];
@@ -460,91 +460,91 @@ inline byte DXLQ::setPosition(const byte bID[], const byte bIDLength, const word
 	return this->setWord(bID, bIDLength, DXL_GOAL_POSITION, wPosition);
 }
 
-inline byte DXLQ::setPosition(const byte bID[], const byte bIDLength, const word wPosition[])
+inline byte DXL::setPosition(const byte bID[], const byte bIDLength, const word wPosition[])
 {
 	return this->setWord(bID, bIDLength, DXL_GOAL_POSITION, wPosition);
 }
 
 
 // DXL_MOVING_SPEED, DXL_PRESENT_SPEED
-inline word DXLQ::getSpeed(const byte bID)
+inline word DXL::getSpeed(const byte bID)
 {
 	return this->getWord(bID, DXL_PRESENT_SPEED);
 }
 
-inline void DXLQ::getSpeed(const byte bID[], const byte bIDLength, word wSpeed[])
+inline void DXL::getSpeed(const byte bID[], const byte bIDLength, word wSpeed[])
 {
 	this->getWord(bID, bIDLength, DXL_PRESENT_SPEED, wSpeed);
 }
 
 
-inline byte DXLQ::setSpeed(const word wSpeed)
+inline byte DXL::setSpeed(const word wSpeed)
 {
 	return this->setWord(DXL_MOVING_SPEED, wSpeed);
 }
 
-inline byte DXLQ::setSpeed(const byte bID, const word wSpeed)
+inline byte DXL::setSpeed(const byte bID, const word wSpeed)
 {
 	return this->setWord(bID, DXL_MOVING_SPEED, wSpeed);
 }
 
-inline byte DXLQ::setSpeed(const byte bID[], const byte bIDLength, const word wSpeed)
+inline byte DXL::setSpeed(const byte bID[], const byte bIDLength, const word wSpeed)
 {
 	return this->setWord(bID, bIDLength, DXL_MOVING_SPEED, wSpeed);
 }
 
-inline byte DXLQ::setSpeed(const byte bID[], const byte bIDLength, const word wSpeed[])
+inline byte DXL::setSpeed(const byte bID[], const byte bIDLength, const word wSpeed[])
 {
 	return this->setWord(bID, bIDLength, DXL_MOVING_SPEED, wSpeed);
 }
 
 
 // DXL_TORQUE_LIMIT, DXL_PRESENT_LOAD
-inline word DXLQ::getLoad(const byte bID)
+inline word DXL::getLoad(const byte bID)
 {
 	return this->getWord(bID, DXL_PRESENT_LOAD);
 }
 
-inline void DXLQ::getLoad(const byte bID[], const byte bIDLength, word wLoad[])
+inline void DXL::getLoad(const byte bID[], const byte bIDLength, word wLoad[])
 {
 	this->getWord(bID, bIDLength, DXL_PRESENT_LOAD, wLoad);
 }
 
 
-inline byte DXLQ::setLoad(const word wLoad)
+inline byte DXL::setLoad(const word wLoad)
 {
 	return this->setWord(DXL_TORQUE_LIMIT, wLoad);
 }
 
-inline byte DXLQ::setLoad(const byte bID, const word wLoad)
+inline byte DXL::setLoad(const byte bID, const word wLoad)
 {
 	return this->setWord(bID, DXL_TORQUE_LIMIT, wLoad);
 }
 
-inline byte DXLQ::setLoad(const byte bID[], const byte bIDLength, const word wLoad)
+inline byte DXL::setLoad(const byte bID[], const byte bIDLength, const word wLoad)
 {
 	return this->setWord(bID, bIDLength, DXL_TORQUE_LIMIT, wLoad);
 }
 
-inline byte DXLQ::setLoad(const byte bID[], const byte bIDLength, const word wLoad[])
+inline byte DXL::setLoad(const byte bID[], const byte bIDLength, const word wLoad[])
 {
 	return this->setWord(bID, bIDLength, DXL_TORQUE_LIMIT, wLoad);
 }
 
 
 // DXL_REGISTERED
-inline byte DXLQ::isRegistered(byte bID)
+inline byte DXL::isRegistered(byte bID)
 {
 	return this->getByte(bID, DXL_REGISTERED);
 }
 
-inline void DXLQ::isRegistered(const byte bID[], const byte bIDLength, byte bRegistered[])
+inline void DXL::isRegistered(const byte bID[], const byte bIDLength, byte bRegistered[])
 {
 	this->getByte(bID, bIDLength, DXL_REGISTERED, bRegistered);
 }
 
 
-byte DXLQ::allRegistered(const byte bID[], const byte bIDLength)
+byte DXL::allRegistered(const byte bID[], const byte bIDLength)
 {
 	byte i, bRegistered[bIDLength];
 	
@@ -557,7 +557,7 @@ byte DXLQ::allRegistered(const byte bID[], const byte bIDLength)
 	return DXL_TRUE;
 }
 
-byte DXLQ::anyRegistered(const byte bID[], const byte bIDLength)
+byte DXL::anyRegistered(const byte bID[], const byte bIDLength)
 {
 	byte i, bRegistered[bIDLength];
 	
@@ -572,18 +572,18 @@ byte DXLQ::anyRegistered(const byte bID[], const byte bIDLength)
 
 
 // DXL_MOVING
-inline byte DXLQ::isMoving(byte bID)
+inline byte DXL::isMoving(byte bID)
 {
 	return this->getByte(bID, DXL_MOVING);
 }
 
-inline void DXLQ::isMoving(const byte bID[], const byte bIDLength, byte bMoving[])
+inline void DXL::isMoving(const byte bID[], const byte bIDLength, byte bMoving[])
 {
 	this->getByte(bID, bIDLength, DXL_MOVING, bMoving);
 }
 
 
-byte DXLQ::allMoving(const byte bID[], const byte bIDLength)
+byte DXL::allMoving(const byte bID[], const byte bIDLength)
 {
 	byte i, bMoving[bIDLength];
 	
@@ -596,7 +596,7 @@ byte DXLQ::allMoving(const byte bID[], const byte bIDLength)
 	return DXL_TRUE;
 }
 
-byte DXLQ::anyMoving(const byte bID[], const byte bIDLength)
+byte DXL::anyMoving(const byte bID[], const byte bIDLength)
 {
 	byte i, bMoving[bIDLength];
 	
@@ -611,12 +611,12 @@ byte DXLQ::anyMoving(const byte bID[], const byte bIDLength)
 
 
 // DXL_JOINT_MODE
-inline byte DXLQ::setJointMode(void)
+inline byte DXL::setJointMode(void)
 {
 	return this->setJointMode(BROADCAST_ID);
 }
 
-byte DXLQ::setJointMode(const byte bID)
+byte DXL::setJointMode(const byte bID)
 {
 	byte bStatus;
 	const byte bNumDataPerID = 2;
@@ -628,7 +628,7 @@ byte DXLQ::setJointMode(const byte bID)
 	return bStatus & this->writeWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 // TODO: Handle broadcast ID.
-byte DXLQ::setJointMode(const byte bID[], const byte bIDLength)
+byte DXL::setJointMode(const byte bID[], const byte bIDLength)
 {
 	byte bStatus;
 	word wCCWAngleLimit[bIDLength];
@@ -641,13 +641,27 @@ byte DXLQ::setJointMode(const byte bID[], const byte bIDLength)
 	return bStatus & this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 
+inline byte DXL::isJointMode(const byte bID)
+{
+	return (this->getMode(bID) == DXL_JOINT_MODE);
+}
+
+void DXL::isJointMode(const byte bID[], const byte bIDLength, byte bIsJointMode[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		bIsJointMode[i] = this->isJointMode(bID[i]);
+	}
+}
+
 // DXL_WHEEL_MODE
-inline byte DXLQ::setWheelMode(void)
+inline byte DXL::setWheelMode(void)
 {
 	return this->setWheelMode(BROADCAST_ID);
 }
 
-byte DXLQ::setWheelMode(const byte bID)
+byte DXL::setWheelMode(const byte bID)
 {
 	byte bStatus;
 	const byte bNumDataPerID = 2;
@@ -657,7 +671,7 @@ byte DXLQ::setWheelMode(const byte bID)
 	return bStatus & this->writeWord(bID, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 // TODO: Handle broadcast ID.
-byte DXLQ::setWheelMode(const byte bID[], const byte bIDLength)
+byte DXL::setWheelMode(const byte bID[], const byte bIDLength)
 {
 	byte bStatus;
 	const byte bNumDataPerID = 2;
@@ -667,13 +681,27 @@ byte DXLQ::setWheelMode(const byte bID[], const byte bIDLength)
 	return bStatus & this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 
+inline byte DXL::isWheelMode(const byte bID)
+{
+	return (this->getMode(bID) == DXL_WHEEL_MODE);
+}
+
+void DXL::isWheelMode(const byte bID[], const byte bIDLength, byte bIsWheelMode[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		bIsWheelMode[i] = this->isWheelMode(bID[i]);
+	}
+}
+
 // DXL_MULTI_TURN_MODE
-inline byte DXLQ::setMultiTurnMode(void)
+inline byte DXL::setMultiTurnMode(void)
 {
 	return this->setMultiTurnMode(BROADCAST_ID);
 }
 // TODO: Handle broadcast ID.
-byte DXLQ::setMultiTurnMode(const byte bID)
+byte DXL::setMultiTurnMode(const byte bID)
 {
 	byte bStatus;
 	const byte bNumDataPerID = 2;
@@ -687,7 +715,7 @@ byte DXLQ::setMultiTurnMode(const byte bID)
 	return DXL_FAILURE;
 }
 
-byte DXLQ::setMultiTurnMode(const byte bID[], const byte bIDLength)
+byte DXL::setMultiTurnMode(const byte bID[], const byte bIDLength)
 {
 	byte i, bStatus;
 	const word wMultiTurnOffset = 0;
@@ -703,13 +731,27 @@ byte DXLQ::setMultiTurnMode(const byte bID[], const byte bIDLength)
 	return bStatus & this->writeWord(bID, bIDLength, DXL_TORQUE_LIMIT, DXL_MAX_TORQUE_LIMIT);
 }
 
+inline byte DXL::isMultiTurnMode(const byte bID)
+{
+	return (this->getMode(bID) == DXL_MULTI_TURN_MODE);
+}
+
+void DXL::isMultiTurnMode(const byte bID[], const byte bIDLength, byte bIsMultiTurnMode[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		bIsMultiTurnMode[i] = this->isMultiTurnMode(bID[i]);
+	}
+}
+
 // DXL_TORQUE_CONTROL_MODE
-inline byte DXLQ::setTorqueControlMode(void)
+inline byte DXL::setTorqueControlMode(void)
 {
 	return this->setTorqueControlMode(BROADCAST_ID);
 }
 // TODO: Handle broadcast ID.
-byte DXLQ::setTorqueControlMode(const byte bID)
+byte DXL::setTorqueControlMode(const byte bID)
 {
 	byte bStatus;
 	const byte bNumDataPerID = 2;
@@ -723,7 +765,7 @@ byte DXLQ::setTorqueControlMode(const byte bID)
 	return DXL_FAILURE;
 }
 
-byte DXLQ::setTorqueControlMode(const byte bID[], const byte bIDLength)
+byte DXL::setTorqueControlMode(const byte bID[], const byte bIDLength)
 {
 	byte i, bStatus;
 	const byte bNumDataPerID = 2;
@@ -739,8 +781,22 @@ byte DXLQ::setTorqueControlMode(const byte bID[], const byte bIDLength)
 	return bStatus & this->writeByte(bID, bIDLength, DXL_TORQUE_CONTROL_MODE_ENABLE, DXL_TRUE);
 }
 
+inline byte DXL::isTorqueControlMode(const byte bID)
+{
+	return (this->getMode(bID) == DXL_TORQUE_CONTROL_MODE);
+}
 
-inline byte DXLQ::getMode(const byte bID)
+void DXL::isTorqueControlMode(const byte bID[], const byte bIDLength, byte bIsTorqueControlMode[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		bIsTorqueControlMode[i] = this->isTorqueControlMode(bID[i]);
+	}
+}
+
+
+inline byte DXL::getMode(const byte bID)
 {
 	byte bTorqueControlMode;
 	word wCWAngleLimit, wCCWAngleLimit;
@@ -766,7 +822,7 @@ inline byte DXLQ::getMode(const byte bID)
 	return DXL_UNKNOWN_MODE;
 }
 
-void DXLQ::getMode(const byte bID[], const byte bIDLength, byte bMode[])
+void DXL::getMode(const byte bID[], const byte bIDLength, byte bMode[])
 {
 	byte i;
 	
@@ -775,30 +831,69 @@ void DXLQ::getMode(const byte bID[], const byte bIDLength, byte bMode[])
 	}
 }
 
-
-inline byte DXLQ::zeroSpeed(void)
+inline byte DXL::setMode(const byte bMode)
 {
-	return this->zeroSpeed(BROADCAST_ID);
+	return this->setMode(BROADCAST_ID, bMode);
+}
+
+inline byte DXL::setMode(const byte bID, const byte bMode)
+{
+	switch(bID){
+		case DXL_JOINT_MODE:
+			return this->setJointMode(bID);
+		case DXL_WHEEL_MODE:
+			return this->setWheelMode(bID);
+		case DXL_MULTI_TURN_MODE:
+			return this->setMultiTurnMode(bID);
+		case DXL_TORQUE_CONTROL_MODE:
+			return this->setTorqueControlMode(bID);
+		default:
+			return DXL_FAILURE;
+	}
+}
+
+void DXL::setMode(const byte bID[], const byte bIDLength, const byte bMode[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		this->setMode(bID[i], bMode[i]);
+	}
+}
+
+inline byte DXL::isMode(const byte bID, const byte bMode)
+{
+	return (this->getMode(bID) == bMode);
+}
+
+void DXL::isMode(const byte bID[], byte bIDLength, const byte bMode[], byte bIsMode[])
+{
+	byte i;
+	
+	for (i = 0; i < bIDLength; i++) {
+		bIsMode[i] = this->isMode(bID[i], bMode[i]);
+	}
 }
 
 
-inline byte DXLQ::zeroSpeed(const byte bID)
+// DXL_MOVING_SPEED
+inline byte DXL::stop(void)
 {
-	//const byte bNumDataPerID = 2;
-	//const word wSpeedTorque[2] = {0, 0};
+	return this->stop(BROADCAST_ID);
+}
+
+
+inline byte DXL::stop(const byte bID)
+{
 	const word wSpeed = 0;
 	
-	//return this->syncWrite(bID, DXL_MOVING_SPEED, wSpeedTorque, bNumDataPerID);
 	return this->setWord(bID, DXL_MOVING_SPEED, wSpeed);
 }
 
-inline byte DXLQ::zeroSpeed(const byte bID[], const byte bIDLength)
+inline byte DXL::stop(const byte bID[], const byte bIDLength)
 {
-	//const byte bNumDataPerID = 2;
-	//const word wSpeedTorque[2] = {0, 0};
 	const word wSpeed = 0;
 	
-	//return this->syncWrite(bID, bIDLength, DXL_MOVING_SPEED, wSpeedTorque, bNumDataPerID, bNumDataPerID);
 	return this->setWord(bID, bIDLength, DXL_MOVING_SPEED, wSpeed);
 }
 

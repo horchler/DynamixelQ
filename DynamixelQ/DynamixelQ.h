@@ -2,7 +2,7 @@
  *	DynamixelQ.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 4-4-15, modified: 4-22-15
+ *	Created: 4-4-15, modified: 4-30-15
  */
 
 #ifndef DYNAMIXELQ_H_
@@ -14,11 +14,11 @@
 	#include "DXL_GetSet.h"
 	
 	// Instantiate DynamixelQ object
-	DXLQ Dxl;
+	DXL Dxl;
 #endif
 
-#ifndef DXL_BOARD_H_
-	#include "DXL_Board.h"
+#ifndef BOARD_H_
+	#include "Board.h"
 	
 	// Instantiate Board object
 	BOARD Board;

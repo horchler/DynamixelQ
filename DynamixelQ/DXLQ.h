@@ -1,8 +1,8 @@
 /*
- *	DXLQ.h
+ *	DXL.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-22-15
+ *	Created: 8-13-14, modified: 4-30-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -13,11 +13,11 @@
 #include <math.h>
 #include "DXL_Defines.h"
 
-class DXLQ
+class DXL
 {
 public:
-	DXLQ(void);
-	virtual ~DXLQ(void);
+	DXL(void);
+	virtual ~DXL(void);
 	
 	byte begin(byte baud);
 	
@@ -157,39 +157,48 @@ public:
 	byte setJointMode(byte bID);
 	byte setJointMode(const byte bID[], byte bIDLength);
 	
+	byte isJointMode(byte bID);
+	void isJointMode(const byte bID[], byte bIDLength, byte bIsJointMode[]);
+	
 	// DXL_WHEEL_MODE
 	inline byte setWheelMode(void);
 	byte setWheelMode(byte bID);
 	byte setWheelMode(const byte bID[], byte bIDLength);
+	
+	byte isWheelMode(byte bID);
+	void isWheelMode(const byte bID[], byte bIDLength, byte bIsWheelMode[]);
 	
 	// DXL_MULTI_TURN_MODE
 	inline byte setMultiTurnMode(void);
 	byte setMultiTurnMode(byte bID);
 	byte setMultiTurnMode(const byte bID[], byte bIDLength);
 	
+	byte isMultiTurnMode(byte bID);
+	void isMultiTurnMode(const byte bID[], byte bIDLength, byte bIsMultiTurnMode[]);
+	
 	// DXL_TORQUE_CONTROL_MODE
 	inline byte setTorqueControlMode(void);
 	byte setTorqueControlMode(byte bID);
 	byte setTorqueControlMode(const byte bID[], byte bIDLength);
 	
+	byte isTorqueControlMode(byte bID);
+	void isTorqueControlMode(const byte bID[], byte bIDLength, byte bIsTorqueControlMode[]);
+	
 	// DXL_CONTROL_MODE
 	inline byte getMode(byte bID);
 	void getMode(const byte bID[], byte bIDLength, byte bMode[]);
 	
-	/*
-	byte isJointMode(byte bID);
-	void isJointMode(const byte bID[], byte bIDLength, byte bBoolean[]);
+	inline byte setMode(byte bMode);
+	inline byte setMode(byte bID, byte bMode);
+	void setMode(const byte bID[], byte bIDLength, const byte bMode[]);
 	
-	byte isWheelMode(byte bID);
-	void isWheelMode(const byte bID[], byte bIDLength, byte bBoolean[]);
+	byte isMode(byte bID, byte bMode);
+	void isMode(const byte bID[], byte bIDLength, const byte bMode[], byte bIsMode[]);
 	
-	byte isMultiTurnMode(byte bID);
-	void isMultiTurnMode(const byte bID[], byte bIDLength, byte bBoolean[]);
-	*/
-	
-	inline byte zeroSpeed(void);
-	inline byte zeroSpeed(byte bID);
-	inline byte zeroSpeed(const byte bID[], byte bIDLength);
+	// DXL_MOVING_SPEED
+	inline byte stop(void);
+	inline byte stop(byte bID);
+	inline byte stop(const byte bID[], byte bIDLength);
 	
 	
 	// DXL_GetSet
@@ -482,6 +491,7 @@ public:
 	inline byte setGoalAcceleration(byte bID, byte bGoalAcceleration);
 	byte setGoalAcceleration(const byte bID[], byte bIDLength, byte bGoalAcceleration);
 	byte setGoalAcceleration(const byte bID[], byte bIDLength, byte bGoalAcceleration[]);
+	
 private:
 	/*
 	 *	Convert Dynamixel Data value to BPS value

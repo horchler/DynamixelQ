@@ -2,18 +2,18 @@
  *	DXL_Validate.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 4-12-15, modified: 4-23-15
+ *	Created: 4-12-15, modified: 4-30-15
  */
 
 #ifndef DXL_VALIDATE_H_
 #define DXL_VALIDATE_H_
 
-inline DXL_BOOL DXLQ::isInit(const byte bID)
+inline DXL_BOOL DXL::isInit(const byte bID)
 {
 	return (bID <= DXL_MAX_ID && this->dxl_isActuatorID[bID]) ? DXL_TRUE : DXL_FALSE;
 }
 
-void DXLQ::isInit(const byte bID[], const byte bIDLength, DXL_BOOL bIsInit[])
+void DXL::isInit(const byte bID[], const byte bIDLength, DXL_BOOL bIsInit[])
 {
 	byte i;
 	
@@ -23,7 +23,7 @@ void DXLQ::isInit(const byte bID[], const byte bIDLength, DXL_BOOL bIsInit[])
 }
 
 
-inline DXL_BOOL DXLQ::checkID(const byte bID)
+inline DXL_BOOL DXL::checkID(const byte bID)
 {
 	word wModelNumber;
 	
@@ -46,7 +46,7 @@ inline DXL_BOOL DXLQ::checkID(const byte bID)
 }
 
 
-inline DXL_SERIES DXLQ::getSeries(const byte bID)
+inline DXL_SERIES DXL::getSeries(const byte bID)
 {
 	if (this->checkID(bID)) {
 		switch(this->dxl_ModelNumber[bID]) {
@@ -66,7 +66,7 @@ inline DXL_SERIES DXLQ::getSeries(const byte bID)
 	return DXL_UNKNOWN_SERIES;
 }
 
-void DXLQ::getSeries(const byte bID[], const byte bIDLength, DXL_SERIES bSeries[])
+void DXL::getSeries(const byte bID[], const byte bIDLength, DXL_SERIES bSeries[])
 {
 	byte i;
 	
@@ -76,7 +76,7 @@ void DXLQ::getSeries(const byte bID[], const byte bIDLength, DXL_SERIES bSeries[
 }
 
 
-inline DXL_SERIES_TYPE DXLQ::getSeriesType(const byte bID)
+inline DXL_SERIES_TYPE DXL::getSeriesType(const byte bID)
 {
 	if (this->checkID(bID)) {
 		switch(this->dxl_ModelNumber[bID]) {
@@ -97,7 +97,7 @@ inline DXL_SERIES_TYPE DXLQ::getSeriesType(const byte bID)
 	return DXL_UNKNOWN_SERIES_TYPE;
 }
 
-void DXLQ::getSeriesType(const byte bID[], const byte bIDLength, DXL_SERIES_TYPE bSeriesType[])
+void DXL::getSeriesType(const byte bID[], const byte bIDLength, DXL_SERIES_TYPE bSeriesType[])
 {
 	byte i;
 	
@@ -112,7 +112,7 @@ void DXLQ::getSeriesType(const byte bID[], const byte bIDLength, DXL_SERIES_TYPE
  *	byte of a word and 0 otherwise.
  *	http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table
  */
-inline byte DXLQ::isByteAddressValid(const byte bID, const byte bAddress)
+inline byte DXL::isByteAddressValid(const byte bID, const byte bAddress)
 {
 	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
 		switch(this->getSeriesType(bID)) {
@@ -134,7 +134,7 @@ inline byte DXLQ::isByteAddressValid(const byte bID, const byte bAddress)
  *	Returns 1 if an address start location is valid and stores a byte and 0 otherwise.
  *	http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table
  */
-inline byte DXLQ::isByteAddress(const byte bID, const byte bAddress)
+inline byte DXL::isByteAddress(const byte bID, const byte bAddress)
 {
 	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
 		switch(this->getSeriesType(bID)) {
@@ -155,7 +155,7 @@ inline byte DXLQ::isByteAddress(const byte bID, const byte bAddress)
  *	Returns 1 if an address start location is valid and stores a word and 0 otherwise.
  *	http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table
  */
-inline byte DXLQ::isWordAddress(const byte bID, const byte bAddress)
+inline byte DXL::isWordAddress(const byte bID, const byte bAddress)
 {
 	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
 		switch(this->getSeriesType(bID)) {
@@ -173,12 +173,12 @@ inline byte DXLQ::isWordAddress(const byte bID, const byte bAddress)
 }
 
 
-inline byte DXLQ::isValidByte(const byte bData)
+inline byte DXL::isValidByte(const byte bData)
 {
 	return (bData != DXL_INVALID_BYTE);
 }
 
-inline void DXLQ::isValidByte(const byte bData[], const byte bDataLength, byte bValidByte[])
+inline void DXL::isValidByte(const byte bData[], const byte bDataLength, byte bValidByte[])
 {
 	byte i;
 	
@@ -187,7 +187,7 @@ inline void DXLQ::isValidByte(const byte bData[], const byte bDataLength, byte b
 	}
 }
 
-inline byte DXLQ::allValidByte(const byte bData[], const byte bDataLength)
+inline byte DXL::allValidByte(const byte bData[], const byte bDataLength)
 {
 	byte i;
 	
@@ -200,12 +200,12 @@ inline byte DXLQ::allValidByte(const byte bData[], const byte bDataLength)
 }
 
 
-inline byte DXLQ::isValidWord(const word wData)
+inline byte DXL::isValidWord(const word wData)
 {
 	return (wData != DXL_INVALID_WORD);
 }
 
-inline void DXLQ::isValidWord(const word wData[], const byte bDataLength, byte bValidWord[])
+inline void DXL::isValidWord(const word wData[], const byte bDataLength, byte bValidWord[])
 {
 	byte i;
 	
@@ -214,7 +214,7 @@ inline void DXLQ::isValidWord(const word wData[], const byte bDataLength, byte b
 	}
 }
 
-inline byte DXLQ::allValidWord(const word wData[], const byte bDataLength)
+inline byte DXL::allValidWord(const word wData[], const byte bDataLength)
 {
 	byte i;
 	
@@ -227,7 +227,7 @@ inline byte DXLQ::allValidWord(const word wData[], const byte bDataLength)
 }
 
 
-inline byte DXLQ::isAddressWritable(const byte bID, const byte bAddress)
+inline byte DXL::isAddressWritable(const byte bID, const byte bAddress)
 {
 	if (bID <= DXL_MAX_ID && bAddress < DXL_NUM_ADDRESS) {
 		switch(this->getSeriesType(bID)) {
@@ -244,7 +244,7 @@ inline byte DXLQ::isAddressWritable(const byte bID, const byte bAddress)
 	return DXL_FALSE;
 }
 
-inline void DXLQ::isAddressWritable(const byte bID, const byte bAddress[], const byte bNumAddress, byte bWritable[])
+inline void DXL::isAddressWritable(const byte bID, const byte bAddress[], const byte bNumAddress, byte bWritable[])
 {
 	byte i;
 	

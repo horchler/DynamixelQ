@@ -1,8 +1,8 @@
 /*
- *	DXLQ.cpp
+ *	DXL.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-23-15
+ *	Created: 8-13-14, modified: 4-30-15
  *	
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -11,7 +11,7 @@
 #include "usb_type.h"
 #include "DXLQ.h"
 
-DXLQ::DXLQ(void)
+DXL::DXL(void)
 {
 	byte i;
 	
@@ -33,10 +33,10 @@ DXLQ::DXLQ(void)
 		this->dxl_ModelNumber[i] = DXL_UNINTIALIZED_WORD;
 	}
 }
-DXLQ::~DXLQ(void) {
+DXL::~DXL(void) {
 }
 
-byte DXLQ::begin(const byte baud)
+byte DXL::begin(const byte baud)
 {
 	uint32 baudRate;
 	
@@ -69,7 +69,7 @@ byte DXLQ::begin(const byte baud)
 }
 
 
-byte DXLQ::actuators(void)
+byte DXL::actuators(void)
 {
 	byte i;
 	
@@ -81,7 +81,7 @@ byte DXLQ::actuators(void)
 	return this->dxl_num_actuators_initialized;
 }
 
-byte DXLQ::actuators(const byte bID)
+byte DXL::actuators(const byte bID)
 {
 	if (this->dxl_beginCalled && bID <= DXL_MAX_ID) {
 		this->initActuatorID(bID);
@@ -89,7 +89,7 @@ byte DXLQ::actuators(const byte bID)
 	return this->dxl_num_actuators_initialized;
 }
 
-byte DXLQ::actuators(const byte bID[], const byte bIDLength)
+byte DXL::actuators(const byte bID[], const byte bIDLength)
 {
 	byte i;
 	
@@ -107,12 +107,12 @@ byte DXLQ::actuators(const byte bID[], const byte bIDLength)
 }
 
 
-inline byte DXLQ::ping(const byte bID)
+inline byte DXL::ping(const byte bID)
 {
 	return (this->txRxPacket(bID, INST_PING, 0)) ? mRxBuffer[2] : DXL_INVALID_BYTE;
 }
 
-void DXLQ::ping(const byte bID[], const byte bIDLength, byte bPingID[])
+void DXL::ping(const byte bID[], const byte bIDLength, byte bPingID[])
 {
 	byte i;
 	
@@ -122,7 +122,7 @@ void DXLQ::ping(const byte bID[], const byte bIDLength, byte bPingID[])
 }
 
 
-inline byte DXLQ::reset(const byte bID)
+inline byte DXL::reset(const byte bID)
 {
 	byte bResetID;
 	
@@ -131,7 +131,7 @@ inline byte DXLQ::reset(const byte bID)
 	return bResetID;
 }
 
-void DXLQ::reset(const byte bID[], const byte bIDLength, byte bResetID[])
+void DXL::reset(const byte bID[], const byte bIDLength, byte bResetID[])
 {
 	byte i;
 	
@@ -145,7 +145,7 @@ void DXLQ::reset(const byte bID[], const byte bIDLength, byte bResetID[])
 /*
  *	For the single bID, the byte value parameter stored at bAddress is returned.
  */
-byte DXLQ::readByte(const byte bID, const byte bAddress)
+byte DXL::readByte(const byte bID, const byte bAddress)
 {
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_BYTE_LENGTH;
@@ -156,7 +156,7 @@ byte DXLQ::readByte(const byte bID, const byte bAddress)
  *	For each of the bIDLength IDs in bID, the byte value parameter stored at bAddress is
  *	returned in bData.
  */
-void DXLQ::readByte(const byte bID[], const byte bIDLength, const byte bAddress, byte bData[])
+void DXL::readByte(const byte bID[], const byte bIDLength, const byte bAddress, byte bData[])
 {
 	byte i;
 	
@@ -171,7 +171,7 @@ void DXLQ::readByte(const byte bID[], const byte bIDLength, const byte bAddress,
  *	For each of the bIDLength IDs in bID, the byte value parameter stored in the 
  *	corresponding bIDLength elements of the bAddress array is returned in bData.
  */
-void DXLQ::readByte(const byte bID[], const byte bIDLength, const byte bAddress[], byte bData[])
+void DXL::readByte(const byte bID[], const byte bIDLength, const byte bAddress[], byte bData[])
 {
 	byte i;
 	
@@ -184,7 +184,7 @@ void DXLQ::readByte(const byte bID[], const byte bIDLength, const byte bAddress[
 /*
  *	Write the byte value parameter in bData to the address bAddress of all actuators.
  */
-inline byte DXLQ::writeByte(const byte bAddress, const byte bData)
+inline byte DXL::writeByte(const byte bAddress, const byte bData)
 {
 	return this->writeByte(BROADCAST_ID, bAddress, bData);
 }
@@ -193,7 +193,7 @@ inline byte DXLQ::writeByte(const byte bAddress, const byte bData)
  *	For the single ID, bID, write the byte value parameter in bData to the address
  *	bAddress. 
  */
-byte DXLQ::writeByte(const byte bID, const byte bAddress, const byte bData)
+byte DXL::writeByte(const byte bID, const byte bAddress, const byte bData)
 {
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = bData;
@@ -207,7 +207,7 @@ byte DXLQ::writeByte(const byte bID, const byte bAddress, const byte bData)
  *	maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::writeByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData)
+byte DXL::writeByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData)
 {
 	byte i, buff_idx = 1, lobyte;
 	
@@ -228,7 +228,7 @@ byte DXLQ::writeByte(const byte bID[], const byte bIDLength, const byte bAddress
  *	so as not to exceed the maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::writeByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData[])
+byte DXL::writeByte(const byte bID[], const byte bIDLength, const byte bAddress, const byte bData[])
 {
 	byte i, buff_idx = 1;
 	
@@ -245,7 +245,7 @@ byte DXLQ::writeByte(const byte bID[], const byte bIDLength, const byte bAddress
 /*
  *	For the single bID, the word value parameter stored at bAddress is returned.
  */
-word DXLQ::readWord(const byte bID, const byte bAddress)
+word DXL::readWord(const byte bID, const byte bAddress)
 {
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_WORD_LENGTH;
@@ -256,7 +256,7 @@ word DXLQ::readWord(const byte bID, const byte bAddress)
  *	For each of the bIDLength IDs in bID, the word value parameter stored at bAddress is
  *	returned in wData.
  */
-void DXLQ::readWord(const byte bID[], const byte bIDLength, const byte bAddress, word wData[])
+void DXL::readWord(const byte bID[], const byte bIDLength, const byte bAddress, word wData[])
 {
 	byte i;
 	
@@ -271,7 +271,7 @@ void DXLQ::readWord(const byte bID[], const byte bIDLength, const byte bAddress,
  *	For each of the bIDLength IDs in bID, the word value parameter stored in the 
  *	corresponding bIDLength elements of the bAddress array is returned in wData.
  */
-void DXLQ::readWord(const byte bID[], const byte bIDLength, const byte bAddress[], word wData[])
+void DXL::readWord(const byte bID[], const byte bIDLength, const byte bAddress[], word wData[])
 {
 	byte i;
 	
@@ -283,7 +283,7 @@ void DXLQ::readWord(const byte bID[], const byte bIDLength, const byte bAddress[
 /*
  *	Write the word value parameter in wData to the address bAddress of all actuators.
  */
-inline byte DXLQ::writeWord(const byte bAddress, const word wData)
+inline byte DXL::writeWord(const byte bAddress, const word wData)
 {
 	return this->writeWord(BROADCAST_ID, bAddress, wData);
 }
@@ -292,7 +292,7 @@ inline byte DXLQ::writeWord(const byte bAddress, const word wData)
  *	For the single ID, bID, write the word value parameter in wData to the address
  *	bAddress. 
  */
-byte DXLQ::writeWord(const byte bID, const byte bAddress, const word wData)
+byte DXL::writeWord(const byte bID, const byte bAddress, const word wData)
 {
 	this->mParamBuffer[0] = bAddress;
 	this->mParamBuffer[1] = DXL_LOBYTE(wData);
@@ -307,7 +307,7 @@ byte DXLQ::writeWord(const byte bID, const byte bAddress, const word wData)
  *	maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::writeWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData)
+byte DXL::writeWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData)
 {
 	byte i, buff_idx = 1, lobyte, hibyte;
 	
@@ -330,7 +330,7 @@ byte DXLQ::writeWord(const byte bID[], const byte bIDLength, const byte bAddress
  *	so as not to exceed the maximum packet length, DXL_MAX_PACKET_LENGTH bytes.
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
-byte DXLQ::writeWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData[])
+byte DXL::writeWord(const byte bID[], const byte bIDLength, const byte bAddress, const word wData[])
 {
 	byte i, buff_idx = 1;
 	
@@ -355,7 +355,7 @@ byte DXLQ::writeWord(const byte bID[], const byte bIDLength, const byte bAddress
  *	wData. This function does not actually use the the SYNC_READ instruction from
  *	Dynamixel protocol 2.0, but rather emulates its capabilities.
  */
-void DXLQ::syncRead(const byte bID, const byte bStartAddress, const byte bNumAddress, word wData[])
+void DXL::syncRead(const byte bID, const byte bStartAddress, const byte bNumAddress, word wData[])
 {
 	byte i, addr_len = 0, buff_idx = 5, addr_sz[bNumAddress];
 	
@@ -404,7 +404,7 @@ void DXLQ::syncRead(const byte bID, const byte bStartAddress, const byte bNumAdd
  *	instruction, but rather emulates its capabilities.
  */
  // TODO: Check that IDs are valid before putting them in wData.
-void DXLQ::syncRead(const byte bID[], byte bIDLength, const byte bStartAddress, const byte bNumAddress, word wData[])
+void DXL::syncRead(const byte bID[], byte bIDLength, const byte bStartAddress, const byte bNumAddress, word wData[])
 {
 	byte i, j, k, buff_idx = 0;
 	
@@ -433,7 +433,7 @@ void DXLQ::syncRead(const byte bID[], byte bIDLength, const byte bStartAddress, 
  *	function does not actually use the SYNC_WRITE instruction as it is unnecessary for
  *	writing to a single ID.
  */
-byte DXLQ::syncWrite(const byte bStartAddress, const word wData[], const byte bNumDataPerID)
+byte DXL::syncWrite(const byte bStartAddress, const word wData[], const byte bNumDataPerID)
 {
 	return this->syncWrite(BROADCAST_ID, bStartAddress, wData, bNumDataPerID);
 }
@@ -447,7 +447,7 @@ byte DXLQ::syncWrite(const byte bStartAddress, const word wData[], const byte bN
  *	writing to a single ID.
  */
 // TODO: Check that IDs are valid
-byte DXLQ::syncWrite(const byte bID, const byte bStartAddress, const word wData[], const byte bNumData)
+byte DXL::syncWrite(const byte bID, const byte bStartAddress, const word wData[], const byte bNumData)
 {
 	byte i, buff_idx = 0;
 	
@@ -485,7 +485,7 @@ byte DXLQ::syncWrite(const byte bID, const byte bStartAddress, const word wData[
  *	http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE
  */
  // TODO: Check that IDs are valid -FIX bID[0] HACK!!
-byte DXLQ::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAddress, const word wData[], const byte bNumDataPerID, const byte bDataLength)
+byte DXL::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAddress, const word wData[], const byte bNumDataPerID, const byte bDataLength)
 {	
 	byte i, j, buff_idx = 2, addr_idx = bStartAddress, valid_idx;
 	
@@ -537,7 +537,7 @@ byte DXLQ::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAd
 
 
 // TODO: Tune delay. Use elapsed timer to remove delay if inter-call time long enough.
-void DXLQ::writeRaw(const uint8 value)
+void DXL::writeRaw(const uint8 value)
 {
 	this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
 	this->dxlTxEnable();	// Call dxlTxEnable() before write operations
@@ -546,7 +546,7 @@ void DXLQ::writeRaw(const uint8 value)
 	this->dxlTxDisable();	//Call dxlTxDisable() after writing finished
 }
 // TODO: Tune delay. Use elapsed timer to remove delay if inter-call time long enough.
-void DXLQ::writeRaw(const uint8 *value, byte len)
+void DXL::writeRaw(const uint8 *value, byte len)
 {
 	this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
 	this->dxlTxEnable();
@@ -565,7 +565,7 @@ void DXLQ::writeRaw(const uint8 *value, byte len)
 /*
  *	PRIVATE MEMBER FUNCTIONS
  */
-void DXLQ::initActuatorID(const byte bID)
+void DXL::initActuatorID(const byte bID)
 {
 	word wModelNumber;
 	
@@ -584,7 +584,7 @@ void DXLQ::initActuatorID(const byte bID)
 }
 
  
-void DXLQ::txPacket(const byte bID, const DXL_INSTRUCTION bInstruction, const byte bParameterLength)
+void DXL::txPacket(const byte bID, const DXL_INSTRUCTION bInstruction, const byte bParameterLength)
 {
 	byte bCount, bCheckSum;
 	
@@ -608,7 +608,7 @@ void DXLQ::txPacket(const byte bID, const DXL_INSTRUCTION bInstruction, const by
 	this->mDXLtxrxStatus = (1<<COMM_TXSUCCESS);
 }
 // TODO: Tune delay and timeout count.
-byte DXLQ::rxPacket(const byte bID, const byte bRxLength)
+byte DXL::rxPacket(const byte bID, const byte bRxLength)
 {
 	unsigned long ulCounter;
 	byte bCount, bLength, bChecksum;
@@ -648,7 +648,7 @@ byte DXLQ::rxPacket(const byte bID, const byte bRxLength)
  */
 // TODO: Handle other Instructions.
 // TODO: Make sure mDXLtxrxStatus is correct and complete (or maybe remove it).
-byte DXLQ::txRxPacket(const byte bID, const DXL_INSTRUCTION bInst, const byte bTxParaLen)
+byte DXL::txRxPacket(const byte bID, const DXL_INSTRUCTION bInst, const byte bTxParaLen)
 {
 	byte bRxLenEx;
 	
@@ -675,7 +675,7 @@ byte DXLQ::txRxPacket(const byte bID, const DXL_INSTRUCTION bInst, const byte bT
 }
 
 // TODO: Write in ARM assembly in terms of clock cycles.
-void DXLQ::nsDelay(uint32 nsTime)
+void DXL::nsDelay(uint32 nsTime)
 {
 	uint32 i;
 	static uint32 cnt = 0;

@@ -10,7 +10,7 @@
  *	less to handle AX Series actuators or mixed types.
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 3-22-15, modified: 4-22-15
+ *	Created: 3-22-15, modified: 4-30-15
  */
 
 #include "DynamixelQ.h"
@@ -26,7 +26,7 @@ void setup()
   USBprint("\nInitializing... ");
   
   // Stop all actuators in case any are moving
-  Dxl.zeroSpeed();
+  Dxl.stop();
   delay(1000);
   
   // Set DXL_RETURN_DELAY_TIME to 0 ms on all actuators
