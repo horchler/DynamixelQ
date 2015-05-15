@@ -2,7 +2,7 @@
  *	DXL_MX.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-23-15
+ *	Created: 8-13-14, modified: 5-15-15
  */
 
 #ifndef DXL_MX_H_
@@ -53,7 +53,7 @@ enum DXL_MX_MODELS{
 
 // DXL_MX64 and DXL_MX106 only
 #define DXL_CURRENT                    uint8(68)
-#define DXL_TORQUE_CONTROL_MODE_ENABLE uint8(69)
+#define DXL_TORQUE_CONTROL_MODE_ENABLE uint8(70)
 #define DXL_GOAL_TORQUE                uint8(71)
 
 #define DXL_GOAL_ACCELERATION          uint8(73)
