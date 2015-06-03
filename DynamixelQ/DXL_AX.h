@@ -2,7 +2,7 @@
  *	DXL_AX.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-23-15
+ *	Created: 8-13-14, modified: 6-3-15
  */
 
 #ifndef DXL_AX_H_
@@ -29,8 +29,11 @@ enum DXL_AX_MODELS{
 // Conversions
 #define DXL_AX_COMPLIANCE_SLOPE(x) (1<<uint8(log2(DXL_MAX(x, DXL_AX_MIN_COMPLIANCE_SLOPE))))
 
-#define DXL_AX_RADIANS_PER_TICK (2.0*M_PI/DXL_AX_POSITION_RESOLUTION)
 #define DXL_AX_DEGREES_PER_TICK (360.0/DXL_AX_POSITION_RESOLUTION)
+#define DXL_AX_RADIANS_PER_TICK (M_PI*DXL_AX_DEGREES_PER_TICK/180.0)
+
+#define DXL_AX_DEGREES_PER_SECOND_PER_TICK                                       (2.0/3.0)
+#define DXL_AX_RADIANS_PER_SECOND_PER_TICK (M_PI*DXL_AX_DEGREES_PER_SECOND_PER_TICK/180.0)
 
 // Dynamixel register addresses for AX series
 #define DXL_CW_COMPLIANCE_MARGIN  uint8(26)
