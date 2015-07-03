@@ -2,13 +2,14 @@
  *	USBprint.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 4-28-15
+ *	Created: 8-24-14, modified: 7-3-15
  */
  
 #ifndef USBPRINT_H_
 #define USBPRINT_H_
 
 #include <string.h>
+#include "delay.h"
 #include "usb.h"
 
 #ifndef USBPRINT_BUFFER_SIZE
@@ -104,6 +105,22 @@ inline int USBprintRaw(const uint8 *dat, const int datlen)
 	} else {
 		return 0;
 	}
+}
+
+inline void _USBprintRaw(const uint8 dat)
+{
+	delay_us(200);
+	UserToPMABufferCopy(&dat, 0xC0, 1);
+	_SetEPTxCount((uint8)1, 1);
+	_SetEPTxValid((uint8)1);
+}
+
+inline void _USBprintRaw(const uint8 *dat, const int datlen)
+{
+	delay_us(200);
+	UserToPMABufferCopy(dat, 0xC0, datlen);
+	_SetEPTxCount((uint8)1, datlen);
+	_SetEPTxValid((uint8)1);
 }
 
 #endif /* USBPRINT_H_ */

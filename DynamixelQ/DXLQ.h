@@ -2,7 +2,7 @@
  *	DXL.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 5-1-15
+ *	Created: 8-13-14, modified: 7-3-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -64,6 +64,7 @@ public:
 	{
 		return this->mDxlDevice->data_buffer[this->mDxlDevice->read_pointer++ & DXL_RX_BUF_SIZE];
 	}
+	uint8 readRaw(uint8 bData[], uint16 len);
 	void writeRaw(uint8 value);
 	void writeRaw(const uint8 *value, byte len);
 	

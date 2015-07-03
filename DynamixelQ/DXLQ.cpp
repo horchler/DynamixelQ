@@ -2,7 +2,7 @@
  *	DXL.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 4-30-15
+ *	Created: 8-13-14, modified: 7-3-15
  *	
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -536,6 +536,16 @@ byte DXL::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAdd
 }
 
 
+uint8 DXL::readRaw(uint8 bData[], const uint16 len)
+{
+	uint16 i = 0;
+	
+	while (this->available() && i < len) {
+		bData[i++] = this->readRaw();
+	}
+	return i;
+}
+
 // TODO: Tune delay. Use elapsed timer to remove delay if inter-call time long enough.
 void DXL::writeRaw(const uint8 value)
 {
@@ -548,17 +558,19 @@ void DXL::writeRaw(const uint8 value)
 // TODO: Tune delay. Use elapsed timer to remove delay if inter-call time long enough.
 void DXL::writeRaw(const uint8 *value, byte len)
 {
-	this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
-	this->dxlTxEnable();
-	while (len > 1) {
+	if (len > 0) {
+		this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
+		this->dxlTxEnable();
+		while (len > 1) {
+			this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);
+			value++;
+			while (!(this->mDxlUsart->regs->SR & USART_SR_TXE));
+			len--;
+		}
 		this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);
-		value++;
-		while (!(this->mDxlUsart->regs->SR & USART_SR_TXE));
-		len--;
+		while ((this->mDxlUsart->regs->SR & USART_SR_TC) == RESET);
+		this->dxlTxDisable();
 	}
-	this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);
-	while ((this->mDxlUsart->regs->SR & USART_SR_TC) == RESET);
-	this->dxlTxDisable();
 }
 
 
@@ -622,7 +634,7 @@ byte DXL::rxPacket(const byte bID, const byte bRxLength)
 				return 0;
 			}
 		}
-		this->mRxBuffer[bCount] = readRaw();
+		this->mRxBuffer[bCount] = this->readRaw();
 	}
 	
 	bLength = bCount;
