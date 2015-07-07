@@ -2,7 +2,7 @@
  *	DXL_Defines.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 3-8-15, modified: 5-1-15
+ *	Created: 3-8-15, modified: 7-6-15
  */
  
 #ifndef DXL_DEFINES_H_
@@ -125,20 +125,21 @@ enum DXL_CONTROL_MODE{
 
 // DXL_BAUD_RATE baud rates between OpenCM9.04 and Dynamixels
 typedef enum DXL_BAUD_RATE_VALUE{
-	DXL_BAUD_9600    = 207,
-	DXL_BAUD_19200   = 103,
-	DXL_BAUD_57600   =  34,
-	DXL_BAUD_115200  =  16,
-	DXL_BAUD_200000  =   9,
-	DXL_BAUD_250000  =   7,
-	DXL_BAUD_400000  =   4,
-	DXL_BAUD_500000  =   3,
-	DXL_BAUD_1000000 =   1,
-	DXL_BAUD_2000000 =   0,
-	DXL_BAUD_2250000 = 250,
-	DXL_BAUD_2500000 = 251,
-	DXL_BAUD_3000000 = 252
+	DXL_BAUD_9600    = uint8(207),
+	DXL_BAUD_19200   = uint8(103),
+	DXL_BAUD_57600   =  uint8(34),
+	DXL_BAUD_115200  =  uint8(16),
+	DXL_BAUD_200000  =   uint8(9),
+	DXL_BAUD_250000  =   uint8(7),
+	DXL_BAUD_400000  =   uint8(4),
+	DXL_BAUD_500000  =   uint8(3),
+	DXL_BAUD_1000000 =   uint8(1),
+	DXL_BAUD_2000000 =   uint8(0),
+	DXL_BAUD_2250000 = uint8(250),
+	DXL_BAUD_2500000 = uint8(251),
+	DXL_BAUD_3000000 = uint8(252)
 } DXL_BAUD_RATE_VALUE;
+#define DXL_DEFAULT_BAUD_RATE_VALUE DXL_BAUD_3000000
 
 // Packet properties
 #define DXL_BYTE_LENGTH uint8(1)

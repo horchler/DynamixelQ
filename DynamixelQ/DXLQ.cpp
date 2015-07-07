@@ -2,7 +2,7 @@
  *	DXL.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 7-3-15
+ *	Created: 8-13-14, modified: 7-6-15
  *	
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -36,12 +36,19 @@ DXL::DXL(void)
 DXL::~DXL(void) {
 }
 
+byte DXL::begin(void)
+{
+	return this->begin(DXL_DEFAULT_BAUD_RATE_VALUE);
+}
+
 byte DXL::begin(const byte baud)
 {
 	uint32 baudRate;
 	
 	baudRate = this->convertBaudRate(baud);
 	if (baudRate != 0) {
+		this->dxl_baudRateValue = (DXL_BAUD_RATE_VALUE)baud;
+		
 		afio_remap(AFIO_REMAP_USART1);
 		gpio_set_mode(this->mDirPort, this->mDirPin, GPIO_OUTPUT_PP);
 		gpio_write_bit(this->mDirPort, this->mDirPin, 0); // RX Enable
@@ -613,9 +620,9 @@ void DXL::txPacket(const byte bID, const DXL_INSTRUCTION bInstruction, const byt
 		bCheckSum += this->mParamBuffer[bCount];
 		this->mTxBuffer[5+bCount] = this->mParamBuffer[bCount];
 	}
-	this->mTxBuffer[5+bParameterLength] = (byte)(~bCheckSum);
+	this->mTxBuffer[5+bParameterLength] = ~bCheckSum;
 	
-	writeRaw(this->mTxBuffer, 6+bParameterLength);
+	this->writeRaw(this->mTxBuffer, 6+bParameterLength);
 	
 	this->mDXLtxrxStatus = (1<<COMM_TXSUCCESS);
 }
@@ -623,7 +630,7 @@ void DXL::txPacket(const byte bID, const DXL_INSTRUCTION bInstruction, const byt
 byte DXL::rxPacket(const byte bID, const byte bRxLength)
 {
 	unsigned long ulCounter;
-	byte bCount, bLength, bChecksum;
+	byte bCount, bLength;
 	
 	for (bCount = 0; bCount < bRxLength; bCount++) {
 		ulCounter = 0;
@@ -639,15 +646,11 @@ byte DXL::rxPacket(const byte bID, const byte bRxLength)
 	
 	bLength = bCount;
 	if (bLength > 3) {
-		bChecksum = 0;
-		for (bCount = 2; bCount < bLength; bCount++) {
-			bChecksum += this->mRxBuffer[bCount];
-		}
 		if ((this->mRxBuffer[0] != DXL_PACKET_HEADER) ||
 				(this->mRxBuffer[1] != DXL_PACKET_HEADER) ||
 				(this->mRxBuffer[this->mPktIdIndex] != bID) ||
 				(this->mRxBuffer[this->mPktLengthIndex] != bLength-this->mPktInstIndex) ||
-				((bChecksum & DXL_CHECKSUM_MASK) != DXL_CHECKSUM_MASK)) {
+				!(this->isValidChecksum(this->mRxBuffer, bLength))) {
 			this->mDXLtxrxStatus |= (1<<COMM_RXCORRUPT);
 			return 0;
 		}
@@ -678,7 +681,7 @@ byte DXL::txRxPacket(const byte bID, const DXL_INSTRUCTION bInst, const byte bTx
 		bRxLenEx = (bID == BROADCAST_ID) ? 0 : DXL_PACKET_HEADER_LENGTH;
 	}
 	
-	if (this->rxPacket(bID, bRxLenEx) != bRxLenEx) {
+	if (bRxLenEx > 0 && this->rxPacket(bID, bRxLenEx) != bRxLenEx) {
 		return DXL_FAILURE;
 	} else {
 		this->mDXLtxrxStatus = (1<<COMM_RXSUCCESS);

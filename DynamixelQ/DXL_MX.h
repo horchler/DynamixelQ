@@ -2,7 +2,7 @@
  *	DXL_MX.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 6-3-15
+ *	Created: 8-13-14, modified: 7-6-15
  */
 
 #ifndef DXL_MX_H_
@@ -18,8 +18,11 @@ enum DXL_MX_MODELS{
 
 #define DXL_MX_NUM_ADDRESS DXL_NUM_ADDRESS
 
+// Default baud rate value after reset
+#define DXL_MX_DEFAULT_BAUD_RATE_VALUE DXL_BAUD_57600
+
 // Limiting values
-#define DXL_MX_MAX_BAUD uint8(252)
+#define DXL_MX_MAX_BAUD_RATE_VALUE DXL_BAUD_3000000
 
 #define DXL_MX_MAX_MULTI_TURN_OFFSET_MAGNITUDE uint16(0x6000)
 #define DXL_MX_MIN_RESOLUTION_DIVIDER             uint8(0x01)
@@ -27,8 +30,8 @@ enum DXL_MX_MODELS{
 
 #define DXL_MX_MAX_GAIN uint8(0xFE)
 
-#define DXL_MX_POSITION_RESOLUTION            uint16(0x0FFF)
-#define DXL_MX_MAX_MAX_MOVING_SPEED_MAGNITUDE uint16(0x03FF)
+#define DXL_MX_POSITION_RESOLUTION        uint16(0x0FFF)
+#define DXL_MX_MAX_MOVING_SPEED_MAGNITUDE uint16(0x03FF)
 
 #define DXL_MX_MAX_CURRENT      uint16(0xFFFF)
 #define DXL_MX_MAX_GOAL_TORQUE  uint16(0x07FF)

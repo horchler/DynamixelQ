@@ -2,7 +2,7 @@
  *	DXL.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 7-3-15
+ *	Created: 8-13-14, modified: 7-6-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -19,6 +19,7 @@ public:
 	DXL(void);
 	virtual ~DXL(void);
 	
+	byte begin(void);
 	byte begin(byte baud);
 	
 	byte actuators(void);
@@ -67,6 +68,26 @@ public:
 	uint8 readRaw(uint8 bData[], uint16 len);
 	void writeRaw(uint8 value);
 	void writeRaw(const uint8 *value, byte len);
+	
+	inline DXL_BOOL_TYPE isValidChecksum(const byte bData[], const byte bNumData) __attribute__((always_inline))
+	{
+		byte i, bChecksum = 0;
+	
+		for (i = 2; i < bNumData; i++) {
+			bChecksum += bData[i];
+		}
+		return ((bChecksum & DXL_CHECKSUM_MASK) == DXL_CHECKSUM_MASK) ? DXL_TRUE : DXL_FALSE;
+	}
+	
+	inline DXL_BAUD_RATE_VALUE getBaudRateValue(void) __attribute__((always_inline))
+	{
+		return this->dxl_baudRateValue;
+	}
+	
+	inline DXL_BOOL_TYPE isBeginCalled(void) __attribute__((always_inline))
+	{
+		return this->dxl_beginCalled;
+	}
 	
 	
 	// DXL_Utils
@@ -493,6 +514,11 @@ public:
 	byte setGoalAcceleration(const byte bID[], byte bIDLength, byte bGoalAcceleration);
 	byte setGoalAcceleration(const byte bID[], byte bIDLength, byte bGoalAcceleration[]);
 	
+	
+	// DXL_Validate
+	
+	inline DXL_BOOL_TYPE isValidBaudRateValue(byte bBaudRateValue);
+	
 private:
 	/*
 	 *	Convert Dynamixel Data value to BPS value
@@ -558,8 +584,8 @@ private:
 	static const byte mPktLengthIndex = 3;
 	static const byte mPktInstIndex = 4;
 	
-	
-	byte dxl_beginCalled;
+	DXL_BAUD_RATE_VALUE dxl_baudRateValue;
+	DXL_BOOL_TYPE dxl_beginCalled;
 	byte dxl_num_actuators_initialized;
 	
 	byte dxl_isActuatorID[DXL_MAX_ACTUATORS];

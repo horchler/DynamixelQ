@@ -2,7 +2,7 @@
  *	DXL_Utils.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 5-1-15
+ *	Created: 2-23-15, modified: 7-6-15
  */
  
 #ifndef DXL_UTILS_H_
@@ -394,7 +394,7 @@ void DXL::isID(const byte bID[], const byte bIDLength, byte bIsID[])
 // DXL_BAUD_RATE
 inline word DXL::getMaxBaud(const byte bID)
 {
-	return (this->getSeries(bID) == DXL_MX_SERIES) ? DXL_MX_MAX_BAUD : DXL_AX_MAX_BAUD;
+	return (this->getSeries(bID) == DXL_MX_SERIES) ? DXL_MX_MAX_BAUD_RATE_VALUE : DXL_AX_MAX_BAUD_RATE_VALUE;
 }
 
 void DXL::getMaxBaud(const byte bID[], const byte bIDLength, byte bMaxBaud[])

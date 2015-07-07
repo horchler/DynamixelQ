@@ -2,7 +2,7 @@
  *	DXL_AX.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 6-3-15
+ *	Created: 8-13-14, modified: 7-6-15
  */
 
 #ifndef DXL_AX_H_
@@ -17,14 +17,17 @@ enum DXL_AX_MODELS{
 
 #define DXL_AX_NUM_ADDRESS uint8(0x31)
 
+// Default baud rate value after reset
+#define DXL_AX_DEFAULT_BAUD_RATE_VALUE DXL_BAUD_1000000
+
 // Limiting values
-#define DXL_AX_MAX_BAUD uint8(1)
+#define DXL_AX_MAX_BAUD_RATE_VALUE DXL_BAUD_1000000
 
 #define DXL_AX_MIN_COMPLIANCE_SLOPE uint8(0x02)
 #define DXL_AX_MAX_COMPLIANCE_SLOPE uint8(0x80)
 
-#define DXL_AX_POSITION_RESOLUTION            uint16(0x03FF)
-#define DXL_AX_MAX_MAX_MOVING_SPEED_MAGNITUDE uint16(0x03FF)
+#define DXL_AX_POSITION_RESOLUTION        uint16(0x03FF)
+#define DXL_AX_MAX_MOVING_SPEED_MAGNITUDE uint16(0x03FF)
 
 // Conversions
 #define DXL_AX_COMPLIANCE_SLOPE(x) (1<<uint8(log2(DXL_MAX(x, DXL_AX_MIN_COMPLIANCE_SLOPE))))

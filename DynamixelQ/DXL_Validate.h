@@ -2,7 +2,7 @@
  *	DXL_Validate.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 4-12-15, modified: 5-1-15
+ *	Created: 4-12-15, modified: 7-6-15
  */
 
 #ifndef DXL_VALIDATE_H_
@@ -79,6 +79,29 @@ inline DXL_BOOL_TYPE DXL::checkID(const byte bID)
 		}
 	}
 	return DXL_FALSE;
+}
+
+
+inline DXL_BOOL_TYPE DXL::isValidBaudRateValue(const byte bBaudRateValue)
+{
+	switch(bBaudRateValue) {
+		case DXL_BAUD_9600:
+		case DXL_BAUD_19200:
+		case DXL_BAUD_57600:
+		case DXL_BAUD_115200:
+		case DXL_BAUD_200000:
+		case DXL_BAUD_250000:
+		case DXL_BAUD_400000:
+		case DXL_BAUD_500000:
+		case DXL_BAUD_1000000:
+		case DXL_BAUD_2000000:
+		case DXL_BAUD_2250000:
+		case DXL_BAUD_2500000:
+		case DXL_BAUD_3000000:
+			return DXL_TRUE;
+		default:
+			return DXL_FALSE;
+	}
 }
 
 
