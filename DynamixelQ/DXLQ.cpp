@@ -2,12 +2,11 @@
  *	DXL.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 7-6-15
+ *	Created: 8-13-14, modified: 7-9-15
  *	
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
 
-#include "delay.h"
 #include "usb_type.h"
 #include "DXLQ.h"
 
@@ -64,7 +63,7 @@ byte DXL::begin(const byte baud)
 		nvic_irq_set_priority(this->mDxlUsart->irq_num, 0);
 		usart_attach_interrupt(this->mDxlUsart, this->mDxlDevice->handlers);
 		usart_enable(this->mDxlUsart);
-		delay_us(1e5);
+		usDelay(1e5);
 		this->mDXLtxrxStatus = 0;
 		
 		this->clearBuffer();
@@ -134,7 +133,7 @@ inline byte DXL::reset(const byte bID)
 	byte bResetID;
 	
 	bResetID = (this->txRxPacket(bID, INST_FACTORY_RESET, 0)) ? mRxBuffer[2] : DXL_INVALID_BYTE;
-	delay_us(3e5);
+	usDelay(3e5);
 	return bResetID;
 }
 
@@ -145,7 +144,7 @@ void DXL::reset(const byte bID[], const byte bIDLength, byte bResetID[])
 	for (i = 0; i < bIDLength; i++) {
 		bResetID[i] = this->reset(bID[i]);
 	}
-	delay_us(3e5);
+	usDelay(3e5);
 }
 
 
@@ -556,7 +555,7 @@ uint8 DXL::readRaw(uint8 bData[], const uint16 len)
 // TODO: Tune delay. Use elapsed timer to remove delay if inter-call time long enough.
 void DXL::writeRaw(const uint8 value)
 {
-	this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
+	nsDelay(800);		    // Delay to avoid locking/crashing in high-speed communication
 	this->dxlTxEnable();	// Call dxlTxEnable() before write operations
 	this->mDxlUsart->regs->DR = (value & DXL_USART_DR_PARITY_MASK);
 	while ((this->mDxlUsart->regs->SR & USART_SR_TC) == RESET);
@@ -566,7 +565,7 @@ void DXL::writeRaw(const uint8 value)
 void DXL::writeRaw(const uint8 *value, byte len)
 {
 	if (len > 0) {
-		this->nsDelay(800);		// Delay to avoid locking/crashing in high-speed communication
+		nsDelay(800);	// Delay to avoid locking/crashing in high-speed communication
 		this->dxlTxEnable();
 		while (len > 1) {
 			this->mDxlUsart->regs->DR = (*value & DXL_USART_DR_PARITY_MASK);
@@ -635,7 +634,7 @@ byte DXL::rxPacket(const byte bID, const byte bRxLength)
 	for (bCount = 0; bCount < bRxLength; bCount++) {
 		ulCounter = 0;
 		while (!this->available()) {
-			this->nsDelay(0);
+			nsDelay(0);
 			if (ulCounter++ > DXL_RX_TIMEOUT_COUNT) {
 				this->mDXLtxrxStatus |= (1<<COMM_RXTIMEOUT);
 				return 0;
@@ -686,16 +685,5 @@ byte DXL::txRxPacket(const byte bID, const DXL_INSTRUCTION bInst, const byte bTx
 	} else {
 		this->mDXLtxrxStatus = (1<<COMM_RXSUCCESS);
 		return DXL_SUCCESS;
-	}
-}
-
-// TODO: Write in ARM assembly in terms of clock cycles.
-void DXL::nsDelay(uint32 nsTime)
-{
-	uint32 i;
-	static uint32 cnt = 0;
-	
-	for (i = 0; i < nsTime; i++) {
-		cnt += i;
 	}
 }

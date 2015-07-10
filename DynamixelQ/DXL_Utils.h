@@ -2,7 +2,7 @@
  *	DXL_Utils.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 7-6-15
+ *	Created: 2-23-15, modified: 7-9-15
  */
  
 #ifndef DXL_UTILS_H_
@@ -53,7 +53,7 @@ inline byte DXL::doPing(const byte bID)
 	if (this->isValidActuatorID(bID)) {
 		bStatus = this->txRxPacket(bID, INST_PING, 0);
 		while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
-			this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
+			nsDelay(DXL_UTILS_RETRY_NSDELAY);
 			bStatus = this->txRxPacket(bID, INST_PING, 0);
 			retryCount++;
 		}
@@ -80,7 +80,7 @@ byte DXL::getByteData(const byte bID)
 	if (this->isValidActuatorID(bID)) {
 		bStatus = this->txRxPacket(bID, INST_READ, 2);
 		while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
-			this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
+			nsDelay(DXL_UTILS_RETRY_NSDELAY);
 			bStatus = this->txRxPacket(bID, INST_READ, 2);
 			retryCount++;
 		}
@@ -97,7 +97,7 @@ word DXL::getWordData(const byte bID)
 	if (this->isValidActuatorID(bID)) {
 		bStatus = this->txRxPacket(bID, INST_READ, 2);
 		while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
-			this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
+			nsDelay(DXL_UTILS_RETRY_NSDELAY);
 			bStatus = this->txRxPacket(bID, INST_READ, 2);
 			retryCount++;
 		}
@@ -114,7 +114,7 @@ DXL_RETURN_TYPE DXL::setData(const byte bID, const DXL_INSTRUCTION bInstruction,
 	
 	bStatus = this->txRxPacket(bID, bInstruction, bParamLen);
 	while (retryCount < DXL_UTILS_RETRY_COUNT && !bStatus) {
-		this->nsDelay(DXL_UTILS_RETRY_NSDELAY);
+		nsDelay(DXL_UTILS_RETRY_NSDELAY);
 		bStatus = this->txRxPacket(bID, bInstruction, bParamLen);
 		retryCount++;
 	}

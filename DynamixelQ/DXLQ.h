@@ -2,7 +2,7 @@
  *	DXL.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 7-6-15
+ *	Created: 8-13-14, modified: 7-9-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -11,6 +11,7 @@
 #define DXLQ_H_
 
 #include <math.h>
+#include "Timing.h"
 #include "DXL_Defines.h"
 
 class DXL
@@ -564,7 +565,6 @@ private:
 	void txPacket(byte bID, DXL_INSTRUCTION bInstruction, byte bParameterLength);
 	byte rxPacket(byte bID, byte bRxLength);
 	byte txRxPacket(byte bID, DXL_INSTRUCTION bInst, byte bTxParaLen);
-	void nsDelay(uint32 nsTime);
 	
 	dxl_dev *mDxlDevice;	/* Dynamixel */
 	usart_dev *mDxlUsart;	/* USART Device */

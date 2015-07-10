@@ -2,14 +2,14 @@
  *	Board.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 4-19-15, modified: 4-30-15
+ *	Created: 4-19-15, modified: 7-9-15
  */
 
 #include <math.h>
 #include "CM904.h"
-#include "delay.h"
 #include "gpio.h"
 #include "timer.h"
+#include "Timing.h"
 #include "Board.h"
 
 static uint32 LEDTimerDuration;
@@ -340,7 +340,7 @@ byte BOARD::getButtonPress(void)
 {
 	this->initButton();
 	if (gpio_read_bit(GPIOC, BOARD_BUTTON_GPIO_BIT)) {
-		delay_us(BOARD_BUTTON_DEBOUNCE_DELAY);
+		usDelay(BOARD_BUTTON_DEBOUNCE_DELAY);
 		while (gpio_read_bit(GPIOC, BOARD_BUTTON_GPIO_BIT));
 		return BOARD_TRUE;
 	}
