@@ -2,7 +2,7 @@
  *	DXL.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 7-9-15
+ *	Created: 8-13-14, modified: 7-28-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13
  */
@@ -217,6 +217,10 @@ public:
 	
 	byte isMode(byte bID, byte bMode);
 	void isMode(const byte bID[], byte bIDLength, const byte bMode[], byte bIsMode[]);
+	
+	// DXL_GOAL_POSITION, DXL_PRESENT_POSITION
+	inline word zero(byte bID);
+	inline byte zero(const byte bID[], byte bIDLength, word wPosition[]);
 	
 	// DXL_MOVING_SPEED, DXL_TORQUE_LIMIT
 	inline byte stop(void);

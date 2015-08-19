@@ -2,7 +2,7 @@
  *	Tosser.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 7-5-15, modified: 7-13-15
+ *	Created: 7-5-15, modified: 8-19-15
  */
 
 #ifndef TOSSER_H_
@@ -10,7 +10,7 @@
 
 #include "usb.h"
 
-#define TOSSER_CURRENT_VERSION uint8(0x00)
+#define TOSSER_CURRENT_VERSION uint8(0x01)
 
 #define TOSSER_DATA_BUFFER_SIZE uint8(255)
 
@@ -39,10 +39,20 @@ typedef enum TOSSER_STATE{
 	TOSSER_STOP
 } TOSSER_STATE;
 
+#define TOSSER_BYTE_LENGTH uint8(1)
+#define TOSSER_WORD_LENGTH uint8(2)
+#define TOSSER_LONG_LENGTH uint8(4)
+#define TOSSER_INVALID_BYTE uint8(0xFF)
+#define TOSSER_INVALID_WORD uint16(0xFFFF)
+#define TOSSER_INVALID_LONG uint32(0xFFFFFFFF)
+
 #define TOSSER_BLINK_RUN_DURATION 1e4
 #define TOSSER_BLINK_WAIT_DURATION 1e5
 
 #define TOSSER_DEFAULT_BAUD_RATE_VALUE DXL_DEFAULT_BAUD_RATE_VALUE
+
+#define TOSSER_MAKEWORD(a, b) (a | (b << 8))
+#define TOSSER_MAKELONG(a, b, c, d) (a | (b << 8) | (c << 16) | (c << 24))
 
 class TOSSER
 {
@@ -144,8 +154,24 @@ private:
 					break;
 				case TOSSER_BLINK:
 					#ifdef BOARD_H_
-					if (this->bData[3] == TOSSER_BLINK) {
-						Board.blink((this->bTosserState == TOSSER_RUN) ? TOSSER_BLINK_RUN_DURATION : TOSSER_BLINK_WAIT_DURATION);
+					switch(this->bData[3]) {
+						case TOSSER_BLINK:
+							Board.blink((this->bTosserState == TOSSER_RUN) ? TOSSER_BLINK_RUN_DURATION : TOSSER_BLINK_WAIT_DURATION);
+							break;
+						case TOSSER_INVALID_BYTE:
+							Board.setLED(BOARD_LED_OFF);
+							break;
+						case TOSSER_LONG_LENGTH:
+							this->bNum = TOSSER_RETURN_PACKET_LENGTH+TOSSER_LONG_LENGTH;
+							this->USBreadRAW(this->bData, this->bNum);
+							if (this->bData[0] == TOSSER_PACKET_HEADER && this->bData[1] == TOSSER_PACKET_HEADER && this->bData[2] == TOSSER_LONG_LENGTH && Dxl.isValidChecksum(this->bData, this->bNum)) {
+								if (TOSSER_MAKELONG(this->bData[3], this->bData[4], this->bData[5], this->bData[6]) == 1e6) {
+									Board.setLED(BOARD_LED_OFF);
+								}
+							}
+							break;
+						default:
+							break;
 					}
 					#endif
 					break;

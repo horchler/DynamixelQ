@@ -2,7 +2,7 @@
  *	DXL_Utils.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 2-23-15, modified: 7-9-15
+ *	Created: 2-23-15, modified: 7-30-15
  */
  
 #ifndef DXL_UTILS_H_
@@ -918,6 +918,22 @@ void DXL::isMode(const byte bID[], byte bIDLength, const byte bMode[], byte bIsM
 	for (i = 0; i < bIDLength; i++) {
 		bIsMode[i] = this->isMode(bID[i], bMode[i]);
 	}
+}
+
+
+// DXL_GOAL_POSITION
+inline word DXL::zero(const byte bID)
+{
+	word wPosition;
+	
+	wPosition = this->getWord(bID, DXL_PRESENT_POSITION);
+	return (wPosition != DXL_INVALID_WORD && this->setWord(bID, DXL_GOAL_POSITION, wPosition) == DXL_SUCCESS) ? wPosition : DXL_INVALID_WORD;
+}
+
+inline byte DXL::zero(const byte bID[], const byte bIDLength, word wPosition[])
+{
+	this->getWord(bID, bIDLength, DXL_PRESENT_POSITION, wPosition);
+	return this->setWord(bID, bIDLength, DXL_GOAL_POSITION, wPosition);
 }
 
 

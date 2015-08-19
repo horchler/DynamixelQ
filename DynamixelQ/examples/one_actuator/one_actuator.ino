@@ -8,7 +8,7 @@
  *	or less to handle AX Series actuators or mixed types.
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-24-14, modified: 4-30-15
+ *	Created: 8-24-14, modified: 7-28-15
  */
 
 #include "DynamixelQ.h"
@@ -16,26 +16,6 @@
 
 // Specify ID of Dynamixel
 #define ACTUATOR_ID 1
-
-// Elapsed time in microsceonds 
-unsigned long usElapsed(void)
-{
-  unsigned long t_prv;
-  static unsigned long t_now = 0;
-  static int isInit = 1;
-  
-  if (isInit) {
-    isInit = 0;
-    t_now = micros();
-    
-    return 0;
-  } else {
-    t_prv = t_now;
-    t_now = micros();
-    
-    return t_now - t_prv;
-  }
-}
 
 // Calculate moving average
 inline double movingAverge(double Yt)

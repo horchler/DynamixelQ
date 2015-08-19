@@ -2,7 +2,7 @@
  *	DXL.cpp
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 8-13-14, modified: 7-9-15
+ *	Created: 8-13-14, modified: 7-28-15
  *	
  *	Based on: Dynamixel.cpp by in2storm, 11-8-13
  */
@@ -410,7 +410,7 @@ void DXL::syncRead(const byte bID, const byte bStartAddress, const byte bNumAddr
  *	instruction, but rather emulates its capabilities.
  */
  // TODO: Check that IDs are valid before putting them in wData.
-void DXL::syncRead(const byte bID[], byte bIDLength, const byte bStartAddress, const byte bNumAddress, word wData[])
+void DXL::syncRead(const byte bID[], const byte bIDLength, const byte bStartAddress, const byte bNumAddress, word wData[])
 {
 	byte i, j, k, buff_idx = 0;
 	
@@ -493,17 +493,19 @@ byte DXL::syncWrite(const byte bID, const byte bStartAddress, const word wData[]
  // TODO: Check that IDs are valid -FIX bID[0] HACK!!
 byte DXL::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAddress, const word wData[], const byte bNumDataPerID, const byte bDataLength)
 {	
-	byte i, j, buff_idx = 2, addr_idx = bStartAddress, valid_idx;
+	byte i, j, buff_idx = 1, addr_idx = bStartAddress, valid_idx;
 	
 	this->mParamBuffer[0] = bStartAddress;
 	if (bNumDataPerID == bDataLength) {
-		for (i = 0; i < bNumDataPerID; i++) {
+		this->mParamBuffer[++buff_idx] = bID[0];
+		addr_idx = bStartAddress;
+		for (j = 0; j < bNumDataPerID; j++) {
 			if (this->isWordAddress(bID[0], addr_idx)) {
-				this->mParamBuffer[++buff_idx] = DXL_LOBYTE(wData[i]);
-				this->mParamBuffer[++buff_idx] = DXL_HIBYTE(wData[i]);
+				this->mParamBuffer[++buff_idx] = DXL_LOBYTE(wData[j]);
+				this->mParamBuffer[++buff_idx] = DXL_HIBYTE(wData[j]);
 				addr_idx += DXL_WORD_LENGTH;
 			} else if (this->isByteAddress(bID[0], addr_idx)) {
-				this->mParamBuffer[++buff_idx] = DXL_LOBYTE(wData[i]);
+				this->mParamBuffer[++buff_idx] = DXL_LOBYTE(wData[j]);
 				addr_idx++;
 			} else {
 				addr_idx++;
@@ -522,7 +524,9 @@ byte DXL::syncWrite(const byte bID[], const byte bIDLength, const byte bStartAdd
 		}
 	} else {
 		for (i = 0; i < bIDLength; i++) {
-			for (j = 0; j < bNumDataPerID; j++) {
+			this->mParamBuffer[++buff_idx] = bID[i];
+			addr_idx = bStartAddress;
+			for (j = i*bNumDataPerID; j < (i+1)*bNumDataPerID; j++) {
 				if (this->isWordAddress(bID[i], addr_idx)) {
 					this->mParamBuffer[++buff_idx] = DXL_LOBYTE(wData[j]);
 					this->mParamBuffer[++buff_idx] = DXL_HIBYTE(wData[j]);

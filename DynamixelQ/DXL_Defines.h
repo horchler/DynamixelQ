@@ -2,7 +2,7 @@
  *	DXL_Defines.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 3-8-15, modified: 7-6-15
+ *	Created: 3-8-15, modified: 7-14-15
  */
  
 #ifndef DXL_DEFINES_H_
@@ -144,8 +144,10 @@ typedef enum DXL_BAUD_RATE_VALUE{
 // Packet properties
 #define DXL_BYTE_LENGTH uint8(1)
 #define DXL_WORD_LENGTH uint8(2)
+#define DXL_LONG_LENGTH uint8(4)
 #define DXL_INVALID_BYTE uint8(0xFF)
 #define DXL_INVALID_WORD uint16(0xFFFF)
+#define DXL_INVALID_LONG uint32(0xFFFFFFFF)
 #define DXL_MAX_PACKET_LENGTH uint8(143)
 #define DXL_PACKET_HEADER_LENGTH uint8(6)
 #define DXL_READ_WRITE_MIN_PARMETER_LENGTH uint8(2)
