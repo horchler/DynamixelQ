@@ -4,7 +4,7 @@ DynamixelQ
 ######Version 1.2, 4-28-15######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
-Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm.htm).
+Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm/robotis_opencm.htm).
 
 Features and benefits vs. the default library
  - Higher baud rates (up to 3 Mbps for MX series) available directly.
@@ -24,13 +24,15 @@ Current limitations
  - Only MX-64, AX-12, and AX-18 actuators have been specifically tested.
  - More documentation and commenting needed.
  - More and better examples needed.
+ - Note that only the OpenCM9.04-A and B microcontroller versions are supported. The OpenCM9.04-C version not only has different connectors (for XL-320 actuators), but it also appears to use different firmware.
 
 Installation
  1. Quit the ROBOTIS_OpenCM IDE application.
  2. Download and expand the [ZIP archive of the DynamixelQ repository](https://github.com/horchler/DynamixelQ/archive/master.zip). In the resultant *DynamixelQ-master* folder there are two libraries: *DynamixelQ* and *USBprint*.
  3. Locate the *libraries* folder for the ROBOTIS_OpenCM IDE and place the *DynamixelQ* and *USBprint* library folders there. On OS X, this folder is in *Documents/ROBOTIS/*. On Windows, it is located at *Documents\ROBOTIS\* (or possibly *My Documents\ROBOTIS\*).
  4. Relaunch the ROBOTIS_OpenCM IDE. "DynamixelQ" should now appear under *File > Examples* and *Sketch > Import Library...*.
- 5. Minor edits and bug reports and fixes can be submitted by [filing an issue](https://github.com/horchler/DynamixelQ/issues) or via email. To add new functionality or make propose major changes, please [fork the repository](https://help.github.com/articles/fork-a-repo). Any new features should be accompanied by some means of testing. Email or file an issue if you have any questions.
+
+Minor edits and bug reports and fixes can be submitted by [filing an issue](https://github.com/horchler/DynamixelQ/issues) or via email. To add new functionality or make propose major changes, please [fork the repository](https://help.github.com/articles/fork-a-repo). Any new features should be accompanied by some means of testing. Email or file an issue if you have any questions.
 
 --------
 
@@ -53,7 +55,7 @@ How to write from the OpenCM9.04 to PC via USB at high speed
 Acknowledgment of support: This material is based upon work supported by the [National Science Foundation](http://www.nsf.gov/) under [Grant No.&nbsp;1065489](http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=1065489). Disclaimer: Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.  
 &nbsp;  
 
-Copyright &copy; 2014&ndash;2015, Andrew D. Horchler  
+Copyright &copy; 2014&ndash;2016, Andrew D. Horchler  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
