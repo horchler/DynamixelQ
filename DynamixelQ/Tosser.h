@@ -2,7 +2,7 @@
  *	Tosser.h
  *	
  *	Author: Andrew D. Horchler, adh9 @ case.edu
- *	Created: 7-5-15, modified: 8-19-15
+ *	Created: 7-5-15, modified: 2-25-16
  */
 
 #ifndef TOSSER_H_
@@ -10,7 +10,7 @@
 
 #include "usb.h"
 
-#define TOSSER_CURRENT_VERSION uint8(0x01)
+#define TOSSER_CURRENT_VERSION uint8(0x02)
 
 #define TOSSER_DATA_BUFFER_SIZE uint8(255)
 
@@ -59,7 +59,7 @@ class TOSSER
 public:
 	TOSSER(void){
 		#ifdef BOARD_H_
-		Board.setLED(BOARD_LED_OFF);
+		Board.blink(TOSSER_BLINK_WAIT_DURATION);
 		#endif
 		this->bTosserState = TOSSER_WAIT;
 	};
@@ -76,8 +76,8 @@ public:
 		while (this->bTosserState != TOSSER_STOP) {
 			// Read all available raw bytes from USB serial connection
 			this->bNum = usbBytesAvailable();
+            this->USBreadRAW(this->bData, this->bNum);
 			if (this->bNum == TOSSER_COMMAND_PACKET_LENGTH) {
-				this->USBreadRAW(this->bData, this->bNum);
 				this->readCommandPacket();
 			}
 			usDelay(100);
@@ -88,7 +88,7 @@ public:
 					this->bNum = usbBytesAvailable();
 					this->USBreadRAW(this->bData, this->bNum);
 					(this->bNum == TOSSER_COMMAND_PACKET_LENGTH) ? this->readCommandPacket() : Dxl.writeRaw(this->bData, this->bNum);
-			
+                    
 					// Read all available raw bytes from Dynamixel bus and write to USB serial connection
 					this->bNum = Dxl.readRaw(this->bData, TOSSER_DATA_BUFFER_SIZE);
 					this->USBprintRaw(this->bData, this->bNum);
