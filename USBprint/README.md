@@ -37,10 +37,14 @@ How to write from OpenCm9.04 to PC via USB at high speed
  
 --------
 
+Another version of this library specific to [TI Tiva C (Stellaris) series LaunchPad microcontrollers](http://www.ti.com/ww/en/launchpad/launchpads-connected.html), is [available separately](https://github.com/horchler/USBprint).
+
+--------
+
 Acknowledgment of support: This material is based upon work supported by the [National Science Foundation](http://www.nsf.gov/) under [Grant No.&nbsp;1065489](http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=1065489). Disclaimer: Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.  
 &nbsp;  
 
-Copyright &copy; 2015, Andrew D. Horchler  
+Copyright &copy; 2015&ndash;2016, Andrew D. Horchler  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
