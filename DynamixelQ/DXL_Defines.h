@@ -1,7 +1,7 @@
 /*
  *	DXL_Defines.h
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 3-8-15, modified: 7-14-15
  */
  

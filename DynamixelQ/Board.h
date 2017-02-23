@@ -1,7 +1,7 @@
 /*
  *	Board.h
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 4-19-15, modified: 4-30-15
  */
 

@@ -1,7 +1,7 @@
 /*
  *	DXL.h
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 8-13-14, modified: 7-28-15
  *	
  *	Based on: Dynamixel.h by in2storm, 11-8-13, revised 11-12-13

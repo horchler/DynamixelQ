@@ -1,7 +1,7 @@
 /*
  *	DXL_GetSet.h
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 2-23-15, modified: 5-1-15
  */
  

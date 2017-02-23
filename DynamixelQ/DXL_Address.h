@@ -1,7 +1,7 @@
 /*
  *	DXL_Address.h
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 8-13-14, modified: 4-22-15
  */
 

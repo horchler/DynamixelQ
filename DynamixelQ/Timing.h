@@ -1,7 +1,7 @@
 /*
  *	Timing.h
  *
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 2-12-15, modified: 7-9-15
  */
  

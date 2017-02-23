@@ -49,13 +49,21 @@ How to write from the OpenCM9.04 to PC via USB at high speed
  - Increase baud rate between microcontroller and computer.
  - Reduce the [USB latency time](http://robosavvy.com/forum/viewtopic.php?p=8967#p8967) (Windows).
  - Send encoded (compressed) data and decompress later on PC.
- 
+
+--------
+
+Andrew D. Horchler, *horchler @ gmail . com*, [biorobots.case.edu](http://biorobots.case.edu/)  
+Created: 8-13-14, Revision: 1.2, 4-28-15  
+&nbsp;  
+
 --------
 
 Acknowledgment of support: This material is based upon work supported by the [National Science Foundation](http://www.nsf.gov/) under [Grant No.&nbsp;1065489](http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=1065489). Disclaimer: Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.  
 &nbsp;  
 
-Copyright &copy; 2014&ndash;2016, Andrew D. Horchler  
+--------
+
+Copyright &copy; 2014&ndash;2017, Andrew D. Horchler  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

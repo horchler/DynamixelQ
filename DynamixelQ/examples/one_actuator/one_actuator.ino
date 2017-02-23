@@ -7,7 +7,7 @@
  *	Actuator ID 1 must be an MX Series actuator. Change the baud rate to DXL_BAUD_1000000
  *	or less to handle AX Series actuators or mixed types.
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 8-24-14, modified: 7-28-15
  */
 

@@ -1,7 +1,7 @@
 /*
  *	DXL_Validate.h
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 4-12-15, modified: 7-6-15
  */
 

@@ -3,7 +3,7 @@
  *	
  *	Demonstrate timer-based asynchronous blink functions.
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 4-22-15, modified: 4-22-15
  */
 

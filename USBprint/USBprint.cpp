@@ -1,7 +1,7 @@
 /*
  *	USBprint.cpp
  *  
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 8-24-14, modified: 3-22-15
  */
 

@@ -8,7 +8,7 @@
  *	Actuators must be MX Series actuators. Change the baud rate to DXL_BAUD_1000000 or
  *	less to handle AX Series actuators or mixed types.
  *	
- *	Author: Andrew D. Horchler, adh9 @ case.edu
+ *	Author: Andrew D. Horchler, horchler @ gmail . com
  *	Created: 3-22-15, modified: 7-3-15
  */
 
