@@ -1,7 +1,7 @@
 USBprint
 ==========
 #####A Library for fast convenient ```printf```-style printing with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
-######Version 1.1, 4-28-15######
+######Version 1.1, 7-3-15######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/USBprint/archive/master.zip)#####
 
 Features and benefits of ```printf```-style functions vs. the default ```SerialUSB.print```
@@ -42,7 +42,7 @@ Another version of this library specific to [TI Tiva C (Stellaris) series Launch
 --------
 
 Andrew D. Horchler, *horchler @ gmail . com*, [biorobots.case.edu](http://biorobots.case.edu/)  
-Created: 8-24-14, Revision: 1.1, 4-28-15  
+Created: 8-24-14, Revision: 1.1, 7-3-15  
 &nbsp;  
 
 --------

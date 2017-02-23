@@ -1,7 +1,7 @@
 DynamixelQ
 ==========
 #####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) using the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
-######Version 1.2, 4-28-15######
+######Version 1.2, 2-25-16######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
 Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm/robotis_opencm.htm).
@@ -53,7 +53,7 @@ How to write from the OpenCM9.04 to PC via USB at high speed
 --------
 
 Andrew D. Horchler, *horchler @ gmail . com*, [biorobots.case.edu](http://biorobots.case.edu/)  
-Created: 8-13-14, Revision: 1.2, 4-28-15  
+Created: 8-13-14, Revision: 1.2, 2-25-16  
 &nbsp;  
 
 --------
