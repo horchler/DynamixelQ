@@ -2,7 +2,6 @@ USBprint
 ==========
 #####A Library for fast convenient ```printf```-style printing with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
 ######Version 1.1, 7-3-15######
-#####Download Repository: [ZIP Archive](https://github.com/horchler/USBprint/archive/master.zip)#####
 
 Features and benefits of ```printf```-style functions vs. the default ```SerialUSB.print```
  - The ability to convert and transmit multiple values all at once results in faster communication.
