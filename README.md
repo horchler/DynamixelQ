@@ -1,6 +1,6 @@
 DynamixelQ
 ==========
-#####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://www.robotis.com/xe/dynamixel_en) using the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
+#####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://en.robotis.com/index/product.php?cate_code=101010) using the [OpenCM9.04 microcontroller](http://en.robotis.com/index/product.php?cate_code=131010)
 ######Version 1.2, 2-25-16######
 #####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
 
@@ -9,15 +9,15 @@ Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM
 Features and benefits vs. the default library
  - Higher baud rates (up to 3 Mbps for MX series) available directly.
  - Added efficient overloaded array versions of functions to read and write across multiple registers.
- - Emulated [SYNC_READ](http://support.robotis.com/en/product/dynamixel_pro/communication/instruction_status_packet.htm)-based functions.
- - Improved [SYNC_WRITE](http://support.robotis.com/en/product/dynamixel/communication/dxl_instruction.htm#SYNC_WRITE)-based functions.
- - ```#define``` for baud rates and [Dynamixel addresses](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Control_Table).
+ - Emulated [SYNC_READ](http://support.robotis.com/en/product/actuator/dynamixel_pro/communication/instruction_status_packet.htm)-based functions.
+ - Improved [SYNC_WRITE](http://support.robotis.com/en/product/actuator/dynamixel/communication/dxl_instruction.htm)-based functions.
+ - ```#define``` for baud rates and [Dynamixel addresses](http://support.robotis.com/en/product/actuator/dynamixel/mx_series/mx-64at_ar.htm).
  - Added functions that automatically check if register addresses are bytes, words, or invalid.
  - Functions redesigned to use strict byte and word input arguments to catch errors at compile time.
- - Added [fast, flexible ```printf```-style functions](https://github.com/horchler/DynamixelQ/blob/master/USBprint) to replace ```SerialUSB.print```.
- - Added easy-to-use [timer-based asynchronous blink, fade, and button functions](https://github.com/horchler/DynamixelQ/blob/master/DynamixelQ/DXL_Board.h) for the status LED and user switch on the OpenCM9.04 board.
+ - Added [fast, flexible ```printf```-style functions](https://github.com/horchler/DynamixelQ/tree/master/USBprint) to replace ```SerialUSB.print```.
+ - Added easy-to-use [timer-based asynchronous blink, fade, and button functions](https://github.com/horchler/DynamixelQ/blob/master/DynamixelQ/Board.h) for the status LED and user switch on the OpenCM9.04 board.
  - Cleaned up code to improve readability and use consistent style: removed code for boards other than OpenCM9.04 and actuators other than AX and MX series, Removed debug code and code related to 2.0 protocol.
- - Fixed [checksum bug](http://www.robotis.com/xe/?mid=qna_en&document_srl=1140665&comment_srl=1144814&rnd=1144814#comment_1144814).
+ - Fixed a [checksum bug](http://www.robotis.com/xe/?mid=qna_en&document_srl=1140665&comment_srl=1144814&rnd=1144814#comment_1144814).
  - Many other optimizations and improvements.
  
 Current limitations
@@ -45,7 +45,7 @@ How to read from and write to Dynamixels at high speed using the OpenCM9.04
 
 How to write from the OpenCM9.04 to PC via USB at high speed
  - Minimize number of individual USB serial write operations.
- - Use the [fast ```printf```-style functions](https://github.com/horchler/DynamixelQ/blob/master/USBprint) included with DynamixelQ.
+ - Use the [fast ```printf```-style functions](https://github.com/horchler/DynamixelQ/tree/master/USBprint) included with DynamixelQ.
  - Increase baud rate between microcontroller and computer.
  - Reduce the [USB latency time](http://robosavvy.com/forum/viewtopic.php?p=8967#p8967) (Windows).
  - Send encoded (compressed) data and decompress later on PC.
