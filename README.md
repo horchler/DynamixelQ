@@ -11,7 +11,7 @@ Features and benefits vs. the default library
  - Added efficient overloaded array versions of functions to read and write across multiple registers.
  - Emulated [SYNC_READ](http://support.robotis.com/en/product/actuator/dynamixel_pro/communication/instruction_status_packet.htm)-based functions.
  - Improved [SYNC_WRITE](http://support.robotis.com/en/product/actuator/dynamixel/communication/dxl_instruction.htm)-based functions.
- - ```#define``` for baud rates and [Dynamixel addresses](http://support.robotis.com/en/product/actuator/dynamixel/mx_series/mx-64at_ar.htm).
+ - ```#define``` for baud rates and [Dynamixel addresses](http://support.robotis.com/en/product/actuator/dynamixel/mx_series/mx-64at_ar.htm#Actuator_Address_04).
  - Added functions that automatically check if register addresses are bytes, words, or invalid.
  - Functions redesigned to use strict byte and word input arguments to catch errors at compile time.
  - Added [fast, flexible ```printf```-style functions](https://github.com/horchler/DynamixelQ/tree/master/USBprint) to replace ```SerialUSB.print```.
@@ -38,8 +38,8 @@ Minor edits and bug reports and fixes can be submitted by [filing an issue](http
 
 How to read from and write to Dynamixels at high speed using the OpenCM9.04
  - Increase baud rate between microcontroller and servos (though this can be done in software, it's much safer using the Windows-only [Dynamixel Wizard](http://support.robotis.com/en/software/roboplus/dynamixel_monitor.htm) that is part of [RoboPlus](http://support.robotis.com/en/software/roboplus_main.htm)).
- - [Update the firmware](http://www.robotis.com/xe/download_en/1132559) of all of your actuators to make sure that it is current and consistent.
- - Decrease the [return delay time](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Actuator_Address_05).
+ - [Update the firmware](http://support.robotis.com/en/software/roboplus/dynamixel_monitor/firmwaremanagement/dynamixel_monitor_fwupdate.htm) of all of your actuators to make sure that it is current and consistent.
+ - Decrease the [return delay time](http://support.robotis.com/en/product/actuator/dynamixel/mx_series/mx-64at_ar.htm#Actuator_Address_05).
  - Minimize read and write operations by reading and writing across multiple registers and using the SYNC_WRITE-based functions.
  - Remove unnecessary overhead from code.
 
