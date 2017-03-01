@@ -1,6 +1,6 @@
 USBprint
 ==========
-#####A Library for fast convenient ```printf```-style printing with the [OpenCM9.04 microcontroller](http://support.robotis.com/en/product/auxdevice/controller/opencm9.04.htm)
+#####A Library for fast convenient ```printf```-style printing with the [OpenCM9.04 microcontroller](http://en.robotis.com/index/product.php?cate_code=131010)
 ######Version 1.1, 7-3-15######
 
 Features and benefits of ```printf```-style functions vs. the default ```SerialUSB.print```
@@ -22,8 +22,8 @@ Installation
 
 How to read from and write to Dynamixels at high speed using OpenCM9.04
  - Increase baud rate between microcontroller and servos (though this can be done in software, it's much safer using the Windows-only [Dynamixel Wizard](http://support.robotis.com/en/software/roboplus/dynamixel_monitor.htm) that is part of [RoboPlus](http://support.robotis.com/en/software/roboplus_main.htm)).
- - [Update the firmware](http://www.robotis.com/xe/download_en/1132559) of all of your actuators to make sure that it is current and consistent.
- - Decrease the [return delay time](http://support.robotis.com/en/product/dynamixel/mx_series/mx-64.htm#Actuator_Address_05).
+ - [Update the firmware](http://support.robotis.com/en/software/roboplus/dynamixel_monitor/firmwaremanagement/dynamixel_monitor_fwupdate.htm) of all of your actuators to make sure that it is current and consistent.
+ - Decrease the [return delay time](http://support.robotis.com/en/product/actuator/dynamixel/mx_series/mx-64at_ar.htm#Actuator_Address_05).
  - Minimize read and write operations by reading and writing across multiple registers and using the SYNC_WRITE-based functions.
  - Remove unnecessary overhead from code.
 
