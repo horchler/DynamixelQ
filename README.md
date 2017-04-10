@@ -1,8 +1,8 @@
 DynamixelQ
 ==========
-#####A Library to control ROBOTIS [Dynamixel smart servo actuators](http://en.robotis.com/index/product.php?cate_code=101010) using the [OpenCM9.04 microcontroller](http://en.robotis.com/index/product.php?cate_code=131010)
-######Version 1.2, 2-25-16######
-#####Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)#####
+##### A Library to control ROBOTIS [Dynamixel smart servo actuators](http://en.robotis.com/index/product.php?cate_code=101010) using the [OpenCM9.04 microcontroller](http://en.robotis.com/index/product.php?cate_code=131010)
+###### Version 1.2, 2-25-16
+##### Download Repository: [ZIP Archive](https://github.com/horchler/DynamixelQ/archive/master.zip)
 
 Based on [```Dynamixel.cpp```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.cpp) and [```Dynamixel.h```](https://github.com/robotis-pandora/ROBOTIS-OpenCM/blob/master/OpenCM_ide/processing-head/hardware/robotis/cores/robotis/Dynamixel.h) from version 1.0.2 the [ROBOTIS_OpenCM IDE](http://support.robotis.com/en/software/robotis_opencm/robotis_opencm.htm).
 
